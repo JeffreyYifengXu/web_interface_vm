@@ -3,21 +3,17 @@
 # -----
 # You can specify a custom docker image from Docker Hub as your build environment.
 
-# This is an example Starter pipeline configuration
-# Use a skeleton to build, test and deploy using manual and parallel steps
-# -----
-# You can specify a custom docker image from Docker Hub as your build environment.
-
 image: atlassian/default-image:3
 
 pipelines:
   default:
-    - parallel: 
-      - step:
-          name: 'Build and Test'
-          script:
-            - echo "Your build and test goes here..."
-
+    - step:
+        script:
+          - apt-get update -qq && apt-get install -y curl
+          - curl -L https://fly.io/install.sh | sh
+          - export FLYCTL_INSTALL="/root/.fly"
+          - export PATH="$FLYCTL_INSTALL/bin:$PATH"
+          
     # The following deployment steps will be executed for each pipeline run. To configure your steps and conditionally deploy see https://support.atlassian.com/bitbucket-cloud/docs/configure-bitbucket-pipelinesyml/
   branches:
     master:
@@ -25,8 +21,8 @@ pipelines:
           name: 'Deployment to Staging'
           deployment: staging
           script:
-            - apt-get update -qq && apt-get install -y curl
-            - curl -L https://fly.io/install.sh | sh
-            - export FLYCTL_INSTALL="/root/.fly"
-            - export PATH="$FLYCTL_INSTALL/bin:$PATH"
+            #- apt-get update -qq && apt-get install -y curl
+            #- curl -L https://fly.io/install.sh | sh
+            #- export FLYCTL_INSTALL="/root/.fly"
+            #- export PATH="$FLYCTL_INSTALL/bin:$PATH"
             - flyctl deploy --remote-only
