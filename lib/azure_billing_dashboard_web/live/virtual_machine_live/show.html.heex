@@ -1,0 +1,46 @@
+<h1>Show Virtual machine</h1>
+
+<%= if @live_action in [:edit] do %>
+  <.modal return_to={Routes.virtual_machine_show_path(@socket, :show, @virtual_machine)}>
+    <.live_component
+      module={AzureBillingDashboardWeb.VirtualMachineLive.FormComponent}
+      id={@virtual_machine.id}
+      title={@page_title}
+      action={@live_action}
+      virtual_machine={@virtual_machine}
+      return_to={Routes.virtual_machine_show_path(@socket, :show, @virtual_machine)}
+    />
+  </.modal>
+<% end %>
+
+<ul>
+
+  <li>
+    <strong>Name:</strong>
+    <%= @virtual_machine.name %>
+  </li>
+
+  <li>
+    <strong>Process:</strong>
+    <%= @virtual_machine.process %>
+  </li>
+
+  <li>
+    <strong>Status:</strong>
+    <%= @virtual_machine.status %>
+  </li>
+
+  <li>
+    <strong>Cost so far:</strong>
+    <%= @virtual_machine.cost_so_far %>
+  </li>
+
+  <li>
+    <strong>Cost accrued:</strong>
+    <%= @virtual_machine.cost_accrued %>
+  </li>
+
+</ul>
+
+<span><%= live_patch "Edit", to: Routes.virtual_machine_show_path(@socket, :edit, @virtual_machine), class: "button" %></span> |
+<span><%= live_redirect "Back", to: Routes.virtual_machine_index_path(@socket, :index) %></span>
