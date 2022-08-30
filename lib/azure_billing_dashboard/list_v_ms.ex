@@ -101,4 +101,19 @@ defmodule AzureBillingDashboard.List_VMs do
   def change_virtual_machine(%VirtualMachine{} = virtual_machine, attrs \\ %{}) do
     VirtualMachine.changeset(virtual_machine, attrs)
   end
+
+  @doc """
+  Starts a virtual machine
+
+  """
+
+  def start_virtual_machine(%VirtualMachine{} = virtual_machine) do
+    # changeset = VirtualMachine.changeset(virtual_machine, %{status: "Running"})
+    Ecto.Changeset.change(virtual_machine, %{status: "Running"}) |> Repo.update!
+  end
+
+  def stop_virtual_machine(%VirtualMachine{} = virtual_machine) do
+    # changeset = VirtualMachine.changeset(virtual_machine, %{status: "Running"})
+    Ecto.Changeset.change(virtual_machine, %{status: "Stopped"}) |> Repo.update!
+  end
 end

@@ -52,10 +52,10 @@
         <td style="display:grid; grid-template-columns:1fr">
           <span><%= live_redirect "View Details", to: Routes.virtual_machine_show_path(@socket, :show, virtual_machine) %></span>
           <%= if virtual_machine.status === "Running" do %>
-            <span><%= live_patch "Stop", to: Routes.virtual_machine_index_path(@socket, :edit, virtual_machine) %></span>
+            <span><%= link "Stop", to: "#", phx_click: "stop", phx_value_id: virtual_machine.id %></span>
           <% end %>
           <%= if virtual_machine.status === "Stopped" do %>
-            <span><%= live_patch "Start", to: Routes.virtual_machine_index_path(@socket, :edit, virtual_machine) %></span>
+            <span><%= link "Start", to: "#", phx_click: "start", phx_value_id: virtual_machine.id %></span>
           <% end %>
 
           <span><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: virtual_machine.id, data: [confirm: "Are you sure?"] %></span>
