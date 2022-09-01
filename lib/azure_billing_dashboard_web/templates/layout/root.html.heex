@@ -19,6 +19,7 @@
               <li><%= link "LiveDashboard", to: Routes.live_dashboard_path(@conn, :home) %></li>
             <% end %>
           </ul>
+          <%= render "_user_menu.html", assigns %>
         </nav>
         <a href="https://phoenixframework.org/" class="phx-logo">
           <img src="https://uploads-ssl.webflow.com/62879348f9410e08779fe7c3/628c4c43d11e3a683d539e15_5-p-1600.png" width="250" height="250" alt="Strong Compute Logo"/>

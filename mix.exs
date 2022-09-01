@@ -7,7 +7,6 @@ defmodule AzureBillingDashboard.MixProject do
       version: "0.1.0",
       elixir: "~> 1.12",
       elixirc_paths: elixirc_paths(Mix.env()),
-      compilers: [:gettext] ++ Mix.compilers(),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
       deps: deps()
@@ -33,6 +32,8 @@ defmodule AzureBillingDashboard.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
+      {:bcrypt_elixir, "~> 3.0"},
+      {:ecto_enum, "~> 1.4"},
       {:phoenix, "~> 1.6.11"},
       {:phoenix_ecto, "~> 4.4"},
       {:ecto_sql, "~> 3.6"},
