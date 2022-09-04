@@ -18,15 +18,15 @@
     <%= error_tag f, :process %>
 
     <%= label f, :status %>
-    <%= text_input f, :status %>
+    <%= text_input f, :status, value: "Stopped" %>
     <%= error_tag f, :status %>
 
     <%= label f, :cost_so_far %>
-    <%= text_input f, :cost_so_far %>
+    <%= number_input f, :cost_so_far %>
     <%= error_tag f, :cost_so_far %>
 
     <%= label f, :cost_accrued %>
-    <%= text_input f, :cost_accrued %>
+    <%= number_input f, :cost_accrued %>
     <%= error_tag f, :cost_accrued %>
 
     <div>
