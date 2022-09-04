@@ -17,6 +17,10 @@ tbody {
 
 }
 
+.title {
+    font-size: 5000px
+}
+
 .inline {
     float: left;
     padding: 5px;

@@ -36,7 +36,7 @@ a[type='custom']:focus,a[type='custom']:hover{
     white-space:nowrap;
     margin:10px;
 }
-.button-1:focus, {
+.button-1:focus {
     background-color:#323232;
     border-color:#606c76;
     color:#fff;
@@ -115,6 +115,15 @@ pre{padding: 1em;}
   position: relative;
   width: 100%
 }
+
+.container-1{
+  margin: 0 auto;
+  /* max-width: 120.0rem; */
+  padding: 0 2.0rem;
+  position: relative;
+  width: 100%
+}
+
 select {
   width: auto;
 }
