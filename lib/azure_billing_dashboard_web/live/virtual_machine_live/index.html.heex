@@ -1,5 +1,3 @@
-<h1>List of VMs</h1>
-
 <%= if @live_action in [:new, :edit] do %>
   <.modal return_to={Routes.virtual_machine_index_path(@socket, :index)}>
     <.live_component
@@ -14,55 +12,65 @@
 <% end %>
 
 <div style="display:grid; grid-template-columns:1fr 1fr 1fr">
-  <button style="background-color: #04AA6D; color: white; margin:10px"> <%= live_patch "New Virtual machine", to: Routes.virtual_machine_index_path(@socket, :new) %> </button>
-  <button style="background-color: #04AA6D; color: white; margin:10px"> Start all VMs </button>
-  <button style="background-color: #04AA6D; color: white; margin:10px"> Stop all VMs </button>
+  <%= live_patch "New Virtual machine", to: Routes.virtual_machine_index_path(@socket, :new), class: "button-1", type: "custom" %>
+  <%= live_patch "Batch Start", to: :false, class: "button-1", type: "custom" %>
+  <%= live_patch "Batch Stop", to: :false, class: "button-1", type: "custom" %>
 </div>
 
-<hr>
+<hr style="width:120%">
 
-<table style="width:150%">
+<h1>Current VM's</h1>
+
+<table style="width:120%; text-align: center;">
   <thead>
     <tr>
       <th>Name</th>
       <th>Process</th>
       <th>Status</th>
-      <th>Cost since last startup</th>
-      <th>Total Cost</th>
-
-      <th></th>
+      <th>Current Running Cost</th>
+      <th>Actions</th>
     </tr>
   </thead>
   <tbody id="virtualmachines">
     <%= for virtual_machine <- @virtualmachines do %>
       <tr id={"virtual_machine-#{virtual_machine.id}"}>
 
-        <td><%= virtual_machine.name %></td>
-        <td><%= virtual_machine.process %></td>
-        <%= if virtual_machine.status === "Running" do %>
-            <td style="color:#00ff00"><%= virtual_machine.status %></td>
-        <% end %>
-        <%= if virtual_machine.status === "Stopped" do %>
-            <td style="color:#ff0000"><%= virtual_machine.status %></td>
-        <% end %>
-        
-        <td><%= virtual_machine.cost_so_far %></td>
-        <td><%= virtual_machine.cost_accrued %></td>
 
-        <td style="display:grid; grid-template-columns:1fr">
-          <span><%= live_redirect "View Details", to: Routes.virtual_machine_show_path(@socket, :show, virtual_machine) %></span>
-          <%= if virtual_machine.status === "Running" do %>
-            <span><%= link "Stop", to: "#", phx_click: "stop", phx_value_id: virtual_machine.id %></span>
-          <% end %>
-          <%= if virtual_machine.status === "Stopped" do %>
-            <span><%= link "Start", to: "#", phx_click: "start", phx_value_id: virtual_machine.id %></span>
-          <% end %>
+            <td style="word-break: break-all"><%= virtual_machine.name %></td>
+            <td>
+                <div class="meter">
+                    <span style={"width: #{virtual_machine.process}%"}>
+                        <%= virtual_machine.process %>%
+                    </span>
+                </div>
+                <div class="meter">
+                    <span style={"width: #{virtual_machine.process}%"}>
+                        <%= virtual_machine.process %>%
+                    </span>
+                </div>
+            </td>
+            <%= if virtual_machine.status === "Running" do %>
+                <td style="color:#00FF00"><%= virtual_machine.status %></td>
+            <% end %>
+            <%= if virtual_machine.status === "Stopped" do %>
+                <td style="color:#FF0000"><%= virtual_machine.status %></td>
+            <% end %>
 
-          <span><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: virtual_machine.id, data: [confirm: "Are you sure?"] %></span>
-        </td>
+            <td><%= virtual_machine.cost_so_far %></td>
+
+            <td style="display:grid; grid-template-columns:1fr; width: 100%">
+                  <span><%= live_redirect "Details", to: Routes.virtual_machine_show_path(@socket, :show, virtual_machine), class: "button-2" %></span>
+
+              <%= if virtual_machine.status === "Running" do %>
+                    <span style="color:#FFFFFF;"><%= link "Stop", to: "#", phx_click: "stop", phx_value_id: virtual_machine.id, class: "button-2" %></span>
+              <% end %>
+              <%= if virtual_machine.status === "Stopped" do %>
+                    <span><%= link "Start", to: "#", phx_click: "start", phx_value_id: virtual_machine.id, class: "button-2" %></span>
+              <% end %>
+                  <span><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: virtual_machine.id, data: [confirm: "Are you sure?"], class: "button-3" %></span>
+            </td>
+
       </tr>
     <% end %>
   </tbody>
 </table>
-
-<span><%= live_patch "New Virtual machine", to: Routes.virtual_machine_index_path(@socket, :new) %></span>

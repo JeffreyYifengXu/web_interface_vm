@@ -8,27 +8,27 @@
     phx-target={@myself}
     phx-change="validate"
     phx-submit="save">
-  
+
     <%= label f, :name %>
     <%= text_input f, :name %>
     <%= error_tag f, :name %>
-  
+
     <%= label f, :process %>
     <%= text_input f, :process %>
     <%= error_tag f, :process %>
-  
+
     <%= label f, :status %>
     <%= text_input f, :status %>
     <%= error_tag f, :status %>
-  
+
     <%= label f, :cost_so_far %>
     <%= text_input f, :cost_so_far %>
     <%= error_tag f, :cost_so_far %>
-  
+
     <%= label f, :cost_accrued %>
     <%= text_input f, :cost_accrued %>
     <%= error_tag f, :cost_accrued %>
-  
+
     <div>
       <%= submit "Save", phx_disable_with: "Saving..." %>
     </div>

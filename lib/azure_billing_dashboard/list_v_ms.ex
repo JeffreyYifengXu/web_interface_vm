@@ -18,7 +18,7 @@ defmodule AzureBillingDashboard.List_VMs do
 
   """
   def list_virtualmachines do
-    Repo.all(VirtualMachine)
+    Repo.all(from p in VirtualMachine, order_by: [asc: p.status])
   end
 
   @doc """
@@ -101,6 +101,7 @@ defmodule AzureBillingDashboard.List_VMs do
   def change_virtual_machine(%VirtualMachine{} = virtual_machine, attrs \\ %{}) do
     VirtualMachine.changeset(virtual_machine, attrs)
   end
+
 
   @doc """
   Starts a virtual machine
