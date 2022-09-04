@@ -13,8 +13,8 @@
 
 <div style="display:grid; grid-template-columns:1fr 1fr 1fr">
   <%= live_patch "New Virtual machine", to: Routes.virtual_machine_index_path(@socket, :new), class: "button-1", type: "custom" %>
-  <%= live_patch "Batch Start", to: :false, class: "button-1", type: "custom" %>
-  <%= live_patch "Batch Stop", to: :false, class: "button-1", type: "custom" %>
+  <%= link "Batch Start", to: "#", phx_click: "batch-start", class: "button-1", type: "custom" %>
+  <%= link "Batch Stop", to: "#", phx_click: "batch-stop", class: "button-1", type: "custom" %>
 </div>
 
 <hr style="width:120%">
