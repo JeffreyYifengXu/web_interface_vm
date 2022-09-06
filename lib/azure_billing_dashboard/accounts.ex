@@ -19,6 +19,7 @@ defmodule AzureBillingDashboard.Accounts do
       {:error, %Ecto.Changeset{}}
   """
 
+
   def register_admin(attrs) do
     %User{}
     |> User.admin_registration_changeset(attrs)
