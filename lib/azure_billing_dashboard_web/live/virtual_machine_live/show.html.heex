@@ -1,3 +1,5 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script> <%# Needed for Chart.js graphing library %>
+
 <h1>Show Virtual machine</h1>
 
 <%= if @live_action in [:edit] do %>
@@ -45,25 +47,23 @@
 <span><%= live_patch "Edit", to: Routes.virtual_machine_show_path(@socket, :edit, @virtual_machine), class: "button" %></span> |
 <span><%= live_redirect "Back", to: Routes.virtual_machine_index_path(@socket, :index), class: "button" %></span>
 <br><br><br><br>
-<%= @graph %>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+<%= @graph %>
 
 <div>
 <canvas id="pie-chart" width="800" height="450"></canvas>
 </div>
 
 <script>
-var x = <%= @test%> - 2;
-   
+
 new Chart(document.getElementById("pie-chart"), {
     type: 'pie',
     data: {
       labels: ["Remaining", "Spent"],
       datasets: [{
-        label: "Amount Spent %",
+        label: "HELLO WORLD",
         backgroundColor: ["#3e95cd", "#8e5ea2"],
-        data: [x, 67]
+        data: [<%= @test %>, 90]
       }]
     },
     options: {

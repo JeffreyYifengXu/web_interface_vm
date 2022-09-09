@@ -27,7 +27,7 @@ defmodule AzureBillingDashboardWeb.VirtualMachineLive.Show do
   defp page_title(:edit), do: "Edit Virtual machine"
 
   def test_data() do
-    data = 10
+    data = 20
   end
 
   def test_plot() do
