@@ -19,11 +19,16 @@ defmodule AzureBillingDashboardWeb.VirtualMachineLive.Show do
      |> assign(:page_title, page_title(socket.assigns.live_action))
      |> assign(:virtual_machine, List_VMs.get_virtual_machine!(id))
      |> assign(:graph, test_plot())
+     |> assign(:test, test_data())
     }
   end
 
   defp page_title(:show), do: "Show Virtual machine"
   defp page_title(:edit), do: "Edit Virtual machine"
+
+  def test_data() do
+    data = 10
+  end
 
   def test_plot() do
     data = [{"Jan", 250}, {"Feb", 50}, {"Mar", 301}, {"Apr", 267}, {"May", 200}]

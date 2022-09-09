@@ -46,3 +46,57 @@
 <span><%= live_redirect "Back", to: Routes.virtual_machine_index_path(@socket, :index), class: "button" %></span>
 <br><br><br><br>
 <%= @graph %>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+
+<div>
+<canvas id="pie-chart" width="800" height="450"></canvas>
+</div>
+
+<script>
+var x = <%= @test%> - 2;
+   
+new Chart(document.getElementById("pie-chart"), {
+    type: 'pie',
+    data: {
+      labels: ["Remaining", "Spent"],
+      datasets: [{
+        label: "Amount Spent %",
+        backgroundColor: ["#3e95cd", "#8e5ea2"],
+        data: [x, 67]
+      }]
+    },
+    options: {
+      title: {
+        display: true,
+        text: "Budget"
+      }
+    }
+});
+</script>
+
+<div>
+<canvas id="line-chart" width="800" height="450"></canvas>
+</div>
+
+<script>
+new Chart(document.getElementById("line-chart"), {
+  type: 'line',
+  data: {
+    labels: [0,50, 100, 200, 400],
+    datasets: [{ 
+        data: [1,27,97,96,5],
+        label: "Number of Users",
+        borderColor: "#3e95cd",
+        fill: false
+      }
+    ]
+  },
+  options: {
+    title: {
+      display: true,
+      text: 'VM Activity'
+    }
+  }
+});
+</script>
