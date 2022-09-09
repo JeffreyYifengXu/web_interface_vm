@@ -43,6 +43,6 @@
 </ul>
 
 <span><%= live_patch "Edit", to: Routes.virtual_machine_show_path(@socket, :edit, @virtual_machine), class: "button" %></span> |
-<span><%= live_redirect "Back", to: Routes.virtual_machine_index_path(@socket, :index) %></span>
+<span><%= live_redirect "Back", to: Routes.virtual_machine_index_path(@socket, :index), class: "button" %></span>
 <br><br><br><br>
 <%= @graph %>
