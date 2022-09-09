@@ -48,6 +48,8 @@ defmodule AzureBillingDashboardWeb do
         layout: {AzureBillingDashboardWeb.LayoutView, "live.html"}
 
       unquote(view_helpers())
+
+      import AzureBillingDashboardWeb.LiveHelpers
     end
   end
 

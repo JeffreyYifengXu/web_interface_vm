@@ -29,9 +29,25 @@ defmodule AzureBillingDashboardWeb.VirtualMachineLive.Index do
 
   defp apply_action(socket, :index, _params) do
     socket
-    |> assign(:page_title, "Listing Virtualmachines")
+    |> assign(:page_title, "Listing Virtual machines")
     |> assign(:virtual_machine, nil)
   end
+
+  # @impl true
+  # def handle_event("start all", %{"id" => id}, socket) do
+  #   virtual_machine = List_VMs.get_virtual_machine!(id)
+  #   {:ok, _} = List_VMs.start_virtual_machine(virtual_machine)
+  #
+  #   {:noreply, assign(socket, :virtualmachines, list_virtualmachines())}
+  # end
+  #
+  # @impl true
+  # def handle_event("stop all", %{"id" => id}, socket) do
+  #     virtual_machine = List_VMs.get_virtual_machine!(id)
+  #     {:ok, _} = List_VMs.stop_virtual_machine(virtual_machine)
+  #
+  #     {:noreply, assign(socket, :virtualmachines, list_virtualmachines())}
+  # end
 
   @impl true
   def handle_event("delete", %{"id" => id}, socket) do
@@ -45,12 +61,40 @@ defmodule AzureBillingDashboardWeb.VirtualMachineLive.Index do
     virtual_machine = List_VMs.get_virtual_machine!(id)
     {:ok, _} = List_VMs.start_virtual_machine(virtual_machine)
 
+    # {:noreply, assign(socket, :virtual_machine.process, 100)}
+
     {:noreply, assign(socket, :virtualmachines, list_virtualmachines())}
   end
 
   def handle_event("stop", %{"id" => id}, socket) do
     virtual_machine = List_VMs.get_virtual_machine!(id)
     {:ok, _} = List_VMs.stop_virtual_machine(virtual_machine)
+
+    # {:noreply, assign(socket, :virtual_machine.process, 100)}
+
+    {:noreply, assign(socket, :virtualmachines, list_virtualmachines())}
+  end
+
+  def handle_event("batch-start", _param, socket) do
+    # {}
+    # virtual_machine = List_VMs.get_virtual_machine!(id)
+    virtual_machines = List_VMs.stopall_virtual_machine()
+    for machine <- virtual_machines do
+      List_VMs.start_virtual_machine(machine)
+    end
+    # {:noreply, assign(socket, :virtual_machine.process, 0)}
+
+    {:noreply, assign(socket, :virtualmachines, list_virtualmachines())}
+  end
+
+  def handle_event("batch-stop", _param, socket) do
+    # {}
+    # virtual_machine = List_VMs.get_virtual_machine!(id)
+    virtual_machines = List_VMs.stopall_virtual_machine()
+    for machine <- virtual_machines do
+      List_VMs.stop_virtual_machine(machine)
+    end
+    # {:noreply, assign(socket, :virtual_machine.process, 0)}
 
     {:noreply, assign(socket, :virtualmachines, list_virtualmachines())}
   end
@@ -80,4 +124,5 @@ defmodule AzureBillingDashboardWeb.VirtualMachineLive.Index do
   #   |> assign(:page_title, "Start VM")
   #   |> assign(:virtual_machine, List_VMs.get_virtual_machine!(id))
   # end
+
 end

@@ -19,8 +19,9 @@ defmodule AzureBillingDashboardWeb.VirtualMachineLiveTest do
     test "lists all virtualmachines", %{conn: conn, virtual_machine: virtual_machine} do
       {:ok, _index_live, html} = live(conn, Routes.virtual_machine_index_path(conn, :index))
 
-      assert html =~ "Listing Virtualmachines"
-      assert html =~ virtual_machine.cost_accrued
+      assert html =~ "Listing Virtual machines"
+
+      assert html =~ virtual_machine.cost_so_far
     end
 
     test "saves new virtual_machine", %{conn: conn} do
@@ -42,13 +43,13 @@ defmodule AzureBillingDashboardWeb.VirtualMachineLiveTest do
         |> follow_redirect(conn, Routes.virtual_machine_index_path(conn, :index))
 
       assert html =~ "Virtual machine created successfully"
-      assert html =~ "some cost_accrued"
+      assert html =~ "some cost_so_far"
     end
 
     test "updates virtual_machine in listing", %{conn: conn, virtual_machine: virtual_machine} do
       {:ok, index_live, _html} = live(conn, Routes.virtual_machine_index_path(conn, :index))
 
-      assert index_live |> element("#virtual_machine-#{virtual_machine.id} a", "Edit") |> render_click() =~
+      assert index_live |> element("#virtual_machine-#{virtual_machine.id} a", "Details") |> render_click() =~
                "Edit Virtual machine"
 
       assert_patch(index_live, Routes.virtual_machine_index_path(conn, :edit, virtual_machine))

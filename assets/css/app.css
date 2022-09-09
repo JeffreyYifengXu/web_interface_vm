@@ -1,6 +1,62 @@
 /* This file is for your main application CSS */
 @import "./phoenix.css";
 
+/* custom css for main dashboard */
+
+.vm-container {
+    background-color: #f3f5f9;
+    height: 220px;
+    clear:both;
+}
+
+tbody {
+    background-color: #f3f5f9;
+}
+
+.container-element {
+
+}
+
+.title {
+    font-size: 5000px
+}
+
+.inline {
+    float: left;
+    padding: 5px;
+}
+
+.overview {
+    display: inline; /* the default for span */
+    width: 100px;
+    height: 100px;
+    padding: 5px;
+    border: 1px solid blue;
+    background-color: grey;
+}
+
+.meter {
+    display: flex;
+    overflow: hidden;
+    background-color: #e2e8f0;
+    border-radius: 0.75rem;
+    margin-bottom: 2rem;
+    height: 4rem;
+    width: 250px;
+}
+
+.meter span {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background-color: #4ADEDE;
+    text-align: center;
+    white-space: nowrap;
+    font-weight: 700;
+    font-size: 1.5rem;
+    transition: width 2s ease;
+}
+
 /* Alerts and form errors used by phx.new */
 .alert {
   padding: 15px;
