@@ -7,6 +7,8 @@ defmodule AzureBillingDashboardWeb.VirtualMachineLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
+    # socket = assign_defaults(session, socket)
+    # {:ok, assign(socket, query: "", results: %{})}
     {:ok, assign(socket, :virtualmachines, list_virtualmachines())}
   end
 

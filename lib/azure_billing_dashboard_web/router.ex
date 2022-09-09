@@ -20,14 +20,14 @@ defmodule AzureBillingDashboardWeb.Router do
   scope "/", AzureBillingDashboardWeb do
     pipe_through :browser
 
-    get "/", PageController, :index
-    live "/virtualmachines", VirtualMachineLive.Index, :index
-    live "/virtualmachines/new", VirtualMachineLive.Index, :new
-    live "/virtualmachines/:id/edit", VirtualMachineLive.Index, :edit
-    # live "/virtualmachines/:id/start", VirtualMachineLive.Index, :start
+    # get "/", PageController, :index
+    # live "/virtualmachines", VirtualMachineLive.Index, :index
+    # live "/virtualmachines/new", VirtualMachineLive.Index, :new
+    # live "/virtualmachines/:id/edit", VirtualMachineLive.Index, :edit
+    # # live "/virtualmachines/:id/start", VirtualMachineLive.Index, :start
 
-    live "/virtualmachines/:id", VirtualMachineLive.Show, :show
-    live "/virtualmachines/:id/show/edit", VirtualMachineLive.Show, :edit
+    # live "/virtualmachines/:id", VirtualMachineLive.Show, :show
+    # live "/virtualmachines/:id/show/edit", VirtualMachineLive.Show, :edit
   end
 
   # Other scopes may use custom stacks.
@@ -92,6 +92,15 @@ defmodule AzureBillingDashboardWeb.Router do
     put "/users/settings/update_password", UserSettingsController, :update_password
     put "/users/settings/update_email", UserSettingsController, :update_email
     get "/users/settings/confirm_email/:token", UserSettingsController, :confirm_email
+
+    get "/", PageController, :index
+    live "/virtualmachines", VirtualMachineLive.Index, :index
+    live "/virtualmachines/new", VirtualMachineLive.Index, :new
+    live "/virtualmachines/:id/edit", VirtualMachineLive.Index, :edit
+    # live "/virtualmachines/:id/start", VirtualMachineLive.Index, :start
+
+    live "/virtualmachines/:id", VirtualMachineLive.Show, :show
+    live "/virtualmachines/:id/show/edit", VirtualMachineLive.Show, :edit
 
 
     live "/", PageLive, :index

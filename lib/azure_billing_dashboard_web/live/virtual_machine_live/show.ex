@@ -6,7 +6,9 @@ defmodule AzureBillingDashboardWeb.VirtualMachineLive.Show do
   alias Contex.{BarChart, Plot, Dataset, PointPlot}
 
   @impl true
-  def mount(_params, _session, socket) do
+  def mount(_params, session, socket) do
+    # socket = assign_defaults(_session, socket)
+    # {:ok, assign(socket, query: "", results: %{})}
     socket =
       socket
     {:ok, socket}

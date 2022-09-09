@@ -46,7 +46,6 @@ defmodule AzureBillingDashboardWeb do
     quote do
       use Phoenix.LiveView,
         layout: {AzureBillingDashboardWeb.LayoutView, "live.html"}
-
       unquote(view_helpers())
 
       import AzureBillingDashboardWeb.LiveHelpers
