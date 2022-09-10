@@ -2,8 +2,11 @@ defmodule AzureBillingDashboard.List_VMsTest do
   use AzureBillingDashboard.DataCase
 
   alias AzureBillingDashboard.List_VMs
+  alias AzureBillingDashboard.Repo
 
   alias Poison.Parser
+
+  import Ecto.Query, only: [from: 2]
 
   describe "virtualmachines" do
     alias AzureBillingDashboard.List_VMs.VirtualMachine
@@ -108,11 +111,33 @@ defmodule AzureBillingDashboard.List_VMsTest do
       response = HTTPoison.get! "https://management.azure.com/subscriptions/f2b523ec-c203-404c-8b3c-217fa4ce341e/resourceGroups/usyd-12a/providers/Microsoft.Compute/virtualMachines/#{name}/instanceView?api-version=2022-03-01", header, []
       {status, body} = Poison.decode(response.body)
 
-      # IO.inspect(body["statuses"])
-      [provision, power] = Enum.map(body["statuses"], fn (x) -> x["code"] end)
+      IO.inspect(response)
+      [provision, power] = Enum.map(body["statuses"], fn (x) -> x["displayStatus"] end)
 
       IO.inspect(power)
+
+      if Repo.exists?(from vm in VirtualMachine, where: vm.name == ^"#{name}") == false do
+        IO.inspect("Creating VM " <> "#{name}")
+        List_VMs.create_virtual_machine(%{:name => "#{name}", :status => "#{power}"})
+      else
+        IO.inspect("Virtual Machine " <> "#{name}" <> " already exists")
+
+
+
+
     end
+
+    IO.inspect(Repo.all(from p in VirtualMachine, order_by: [asc: p.status]))
+
+    # Check if VMs exist in database
+    # val = Repo.exists?(from vm in VirtualMachine, where: vm.name == "VM1")
+
+
+    # Repo.all()
+
+
+
+
 
     # response = HTTPoison.get! "https://management.azure.com/subscriptions/f2b523ec-c203-404c-8b3c-217fa4ce341e/resourceGroups/usyd-12a/providers/Microsoft.Compute/virtualMachines/Test-VM-1/instanceView?api-version=2022-03-01", header, []
 
