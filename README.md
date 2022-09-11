@@ -1,7 +1,12 @@
 # AzureBillingDashboard
 
-To start your Phoenix server:
+## Setup Guide
+[Setup your local environment for deployment](https://bitbucket.org/russellzh/comp3888-tut14-3/wiki/Setup)
 
+
+## Starting the Phoenix server
+
+To start your Phoenix server:
   * Install dependencies with `mix deps.get`
   * Create and migrate your database with `mix ecto.setup`
   * Start Phoenix endpoint with `mix phx.server` or inside IEx with `iex -S mix phx.server`
