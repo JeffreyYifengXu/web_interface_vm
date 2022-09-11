@@ -27,7 +27,7 @@ defmodule AzureBillingDashboard.List_VMs do
     HTTPoison.start
 
     # Get Authorization
-    response = HTTPoison.post! 'https://login.microsoftonline.com/a6a9eda9-1fed-417d-bebb-fb86af8465d2/oauth2/token', "grant_type=client_credentials&client_id=4bcba93a-6e11-417f-b4dc-224b008a7385&client_secret=oNH8Q~Gw6j0DKSEkJYlz2Cy65AkTxiPsoSLWKbiZ&resource=https%3A%2F%2Fmanagement.azure.com%2F", [{"Content-Type", "application/x-www-form-urlencoded"}]
+    response = HTTPoison.post! "https://login.microsoftonline.com/{tenant_id}/oauth2/token", "grant_type=client_credentials&client_id=4bcba93a-6e11-417f-b4dc-224b008a7385&client_secret=oNH8Q~Gw6j0DKSEkJYlz2Cy65AkTxiPsoSLWKbiZ&resource=https%3A%2F%2Fmanagement.azure.com%2F", [{"Content-Type", "application/x-www-form-urlencoded"}]
 
     {_status, body} = Poison.decode(response.body)
 
@@ -37,7 +37,7 @@ defmodule AzureBillingDashboard.List_VMs do
 
     # List VMs
 
-    response = HTTPoison.get! "https://management.azure.com/subscriptions/f2b523ec-c203-404c-8b3c-217fa4ce341e/resourceGroups/usyd-12a/providers/Microsoft.Compute/virtualMachines?api-version=2022-03-01", header, []
+    response = HTTPoison.get! "https://management.azure.com/subscriptions/{subscription_id}/resourceGroups/{resource_group}/providers/Microsoft.Compute/virtualMachines?api-version=2022-03-01", header, []
     body = Poison.Parser.parse!(response.body)
     names = Enum.map(body["value"], fn (x) -> x["name"] end)
 
@@ -47,7 +47,7 @@ defmodule AzureBillingDashboard.List_VMs do
     # Cross-check database
     for name <- names do
       # IO.inspect(name)
-      response = HTTPoison.get! "https://management.azure.com/subscriptions/f2b523ec-c203-404c-8b3c-217fa4ce341e/resourceGroups/usyd-12a/providers/Microsoft.Compute/virtualMachines/#{name}/instanceView?api-version=2022-03-01", header, []
+      response = HTTPoison.get! "https://management.azure.com/subscriptions/{subscription_id}/resourceGroups/{resource_group}/providers/Microsoft.Compute/virtualMachines/#{name}/instanceView?api-version=2022-03-01", header, []
       {_status, body} = Poison.decode(response.body)
 
       # IO.inspect(response)
