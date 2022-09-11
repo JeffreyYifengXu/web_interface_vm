@@ -74,7 +74,7 @@ defmodule AzureBillingDashboardWeb.VirtualMachineLive.Index do
   def handle_event("batch-start", _param, socket) do
     # {}
     # virtual_machine = List_VMs.get_virtual_machine!(id)
-    virtual_machines = List_VMs.stopall_virtual_machine()
+    virtual_machines = List_VMs.list_virtualmachines()
     for machine <- virtual_machines do
       List_VMs.start_virtual_machine(machine)
     end
@@ -87,9 +87,7 @@ defmodule AzureBillingDashboardWeb.VirtualMachineLive.Index do
     Handles event when "Batch Stop" is clicked
   """
   def handle_event("batch-stop", _param, socket) do
-    # {}
-    # virtual_machine = List_VMs.get_virtual_machine!(id)
-    virtual_machines = List_VMs.stopall_virtual_machine()
+    virtual_machines = List_VMs.list_virtualmachines()
     for machine <- virtual_machines do
       List_VMs.stop_virtual_machine(machine)
     end
