@@ -67,7 +67,7 @@ defmodule AzureBillingDashboard.List_VMs do
     end
 
     # IO.inspect(Repo.all(from p in VirtualMachine, order_by: [asc: p.status]))
-    Repo.all(from p in VirtualMachine, order_by: [asc: p.status])
+    Repo.all(from p in VirtualMachine, order_by: [desc: p.status])
   end
 
   @doc """
