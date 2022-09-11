@@ -8,7 +8,7 @@ defmodule AzureBillingDashboard.List_VMs.VirtualMachine do
     field :cost_so_far, :string, default: "0.0"
     field :name, :string
     field :process, :string, default: "0.0"
-    field :status, :string, default: "Stopped"
+    field :status, :string, default: "VM deallocated"
     # field :status_bool, :boolean
 
     timestamps()
@@ -21,9 +21,4 @@ defmodule AzureBillingDashboard.List_VMs.VirtualMachine do
     |> validate_required([:name])
     # |> Logger.debug "#{name}"
   end
-
-  # def start_machine(virtual_machine) do
-  #   virtual_machine
-  #   |> cast("Running", [:status])
-  # end
 end
