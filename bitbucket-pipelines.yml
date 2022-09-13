@@ -18,7 +18,7 @@ pipelines:
             - curl -L https://fly.io/install.sh | sh
             - export FLYCTL_INSTALL="/root/.fly"
             - export PATH="$FLYCTL_INSTALL/bin:$PATH"
-            - wget https://packages.erlang-solutions.com/erlang-solutions_2.0_all.deb && sudo dpkg -i erlang-solutions_2.0_all.deb
+            - wget https://packages.erlang-solutions.com/erlang-solutions_2.0_all.deb && dpkg -i erlang-solutions_2.0_all.deb
             - apt-get install esl-erlang
             - apt-get install elixir
             - mix setup
