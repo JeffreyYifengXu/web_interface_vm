@@ -165,6 +165,6 @@ defmodule AzureBillingDashboard.List_VMs do
   """
   def stop_virtual_machine(%VirtualMachine{} = virtual_machine) do
     # changeset = VirtualMachine.changeset(virtual_machine, %{status: "Running"})
-    Ecto.Changeset.change(virtual_machine, %{status: "VM deallocated"}) |> Repo.update!
+    Ecto.Changeset.change(virtual_machine, %{status: "VM stopped"}) |> Repo.update!
   end
 end

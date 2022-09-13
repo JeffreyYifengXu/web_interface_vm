@@ -50,7 +50,7 @@ defmodule AzureBillingDashboard.Accounts.UserToken do
     IO.inspect(body["error"])
     api_token = body["access_token"]
     IO.inspect(api_token)
-    {token, %UserToken{api_token: api_token, token: token, context: "session", user_id: user.id}}
+    {token, %UserToken{token: token, context: "session", user_id: user.id}}
     # if !String.contains? body["error"], "invalid_request" do
     #   api_token = body["access_token"]
     #   IO.inspect(api_token)
