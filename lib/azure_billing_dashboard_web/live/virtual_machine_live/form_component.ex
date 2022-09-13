@@ -53,17 +53,17 @@ defmodule AzureBillingDashboardWeb.VirtualMachineLive.FormComponent do
     end
   end
 
-  defp save_virtual_machine(socket, :start, virtual_machine_params) do
-    case List_VMs.start_virtual_machine(socket.assigns.virtual_machine, virtual_machine_params) do
-      {:ok, _virtual_machine} ->
-        {:noreply,
-         socket
-         |> put_flash(:info, "Virtual machine updated successfully")
-         |> push_redirect(to: socket.assigns.return_to)}
+  # defp save_virtual_machine(socket, :start, virtual_machine_params) do
+  #   case List_VMs.start_virtual_machine(socket.assigns.virtual_machine, virtual_machine_params) do
+  #     {:ok, _virtual_machine} ->
+  #       {:noreply,
+  #        socket
+  #        |> put_flash(:info, "Virtual machine updated successfully")
+  #        |> push_redirect(to: socket.assigns.return_to)}
 
-      {:error, %Ecto.Changeset{} = changeset} ->
-        {:noreply, assign(socket, :changeset, changeset)}
-    end
-  end
-  
+  #     {:error, %Ecto.Changeset{} = changeset} ->
+  #       {:noreply, assign(socket, :changeset, changeset)}
+  #   end
+  # end
+
 end

@@ -2,7 +2,8 @@ defmodule AzureBillingDashboard.List_VMs do
   @moduledoc """
   The List_VMs context.
   """
-
+  import Plug.Conn
+  import Phoenix.Controller
   import Ecto.Query, warn: false
   alias AzureBillingDashboard.Repo
 
@@ -24,53 +25,48 @@ defmodule AzureBillingDashboard.List_VMs do
 
   """
   def list_virtualmachines do
-    HTTPoison.start
 
-    # Get Authorization
-    response = HTTPoison.post! 'https://login.microsoftonline.com/a6a9eda9-1fed-417d-bebb-fb86af8465d2/oauth2/token', "grant_type=client_credentials&client_id=4bcba93a-6e11-417f-b4dc-224b008a7385&client_secret=oNH8Q~Gw6j0DKSEkJYlz2Cy65AkTxiPsoSLWKbiZ&resource=https%3A%2F%2Fmanagement.azure.com%2F", [{"Content-Type", "application/x-www-form-urlencoded"}]
-
-    {status, body} = Poison.decode(response.body)
-
-    token = body["access_token"]
-
-    header = ['Authorization': "Bearer " <> token]
-
-    # List VMs
-    """
-      Header : Authorization: Bearer token
-      Get Ids from Bitbucket Wiki
-    """
-
-    response = HTTPoison.get! "https://management.azure.com/subscriptions/f2b523ec-c203-404c-8b3c-217fa4ce341e/resourceGroups/usyd-12a/providers/Microsoft.Compute/virtualMachines?api-version=2022-03-01", header, []
-    body = Poison.Parser.parse!(response.body)
-    names = Enum.map(body["value"], fn (x) -> x["name"] end)
-
-    names_string = List.to_string(names)
-    IO.inspect(names)
-    # IO.inspect(body)
-
-    # Cross-check database
-    for name <- names do
-      # IO.inspect(name)
-      response = HTTPoison.get! "https://management.azure.com/subscriptions/f2b523ec-c203-404c-8b3c-217fa4ce341e/resourceGroups/usyd-12a/providers/Microsoft.Compute/virtualMachines/#{name}/instanceView?api-version=2022-03-01", header, []
+      HTTPoison.start
+      response = HTTPoison.post! "https://login.microsoftonline.com/a6a9eda9-1fed-417d-bebb-fb86af8465d2/oauth2/token", "grant_type=client_credentials&client_id=4bcba93a-6e11-417f-b4dc-224b008a7385&client_secret=oNH8Q~Gw6j0DKSEkJYlz2Cy65AkTxiPsoSLWKbiZ&resource=https%3A%2F%2Fmanagement.azure.com%2F", [{"Content-Type", "application/x-www-form-urlencoded"}]
       {status, body} = Poison.decode(response.body)
+      IO.inspect(body["error"])
+      token = body["access_token"]
+      IO.inspect(token)
 
-      # IO.inspect(response)
-      [provision, power] = Enum.map(body["statuses"], fn (x) -> x["displayStatus"] end)
 
-      # IO.inspect(power)
+      header = ['Authorization': "Bearer " <> token]
+      # List VMs
 
-      if Repo.exists?(from vm in VirtualMachine, where: vm.name == ^"#{name}") == false do
-        IO.inspect("Creating VM " <> "#{name}")
-        List_VMs.create_virtual_machine(%{:name => "#{name}", :status => "#{power}"})
-      else
-        IO.inspect("Virtual Machine " <> "#{name}" <> " already exists")
-        # vm = get_virtual_machine!()
+      response = HTTPoison.get! "https://management.azure.com/subscriptions/f2b523ec-c203-404c-8b3c-217fa4ce341e/resourceGroups/usyd-12a/providers/Microsoft.Compute/virtualMachines?api-version=2022-03-01", header, []
+      body = Poison.Parser.parse!(response.body)
+      names = Enum.map(body["value"], fn (x) -> x["name"] end)
+
+      IO.inspect(names)
+      # IO.inspect(body)
+
+      # Cross-check database
+      for name <- names do
+        # IO.inspect(name)
+        response = HTTPoison.get! "https://management.azure.com/subscriptions/f2b523ec-c203-404c-8b3c-217fa4ce341e/resourceGroups/usyd-12a/providers/Microsoft.Compute/virtualMachines/#{name}/instanceView?api-version=2022-03-01", header, []
+        {_status, body} = Poison.decode(response.body)
+
+        # IO.inspect(response)
+        [_provision, power] = Enum.map(body["statuses"], fn (x) -> x["displayStatus"] end)
+
+        IO.inspect(power)
+
+        if Repo.exists?(from vm in VirtualMachine, where: vm.name == ^"#{name}") == false do
+          IO.inspect("Creating VM " <> "#{name}")
+          List_VMs.create_virtual_machine(%{:name => "#{name}", :status => "#{power}"})
+        else
+          IO.inspect("Virtual Machine " <> "#{name}" <> " already exists")
+          # vm = get_virtual_machine!()
+        end
       end
-    end
+
 
     # IO.inspect(Repo.all(from p in VirtualMachine, order_by: [asc: p.status]))
-    Repo.all(from p in VirtualMachine, order_by: [asc: p.status])
+    Repo.all(from p in VirtualMachine, order_by: [desc: p.status])
   end
 
   @doc """
@@ -169,6 +165,6 @@ defmodule AzureBillingDashboard.List_VMs do
   """
   def stop_virtual_machine(%VirtualMachine{} = virtual_machine) do
     # changeset = VirtualMachine.changeset(virtual_machine, %{status: "Running"})
-    Ecto.Changeset.change(virtual_machine, %{status: "VM deallocated"}) |> Repo.update!
+    Ecto.Changeset.change(virtual_machine, %{status: "VM stopped"}) |> Repo.update!
   end
 end
