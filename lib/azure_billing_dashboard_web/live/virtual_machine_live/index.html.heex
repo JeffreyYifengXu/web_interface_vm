@@ -62,7 +62,7 @@
                   <span><%= live_redirect "Details", to: Routes.virtual_machine_show_path(@socket, :show, virtual_machine), class: "button-2" %></span>
 
               <%= if String.contains? virtual_machine.status, "running" do %>
-                    <span style="color:#FFFFFF;"><%= link "Stop", to: "#", phx_click: "stop", phx_value_id: virtual_machine.id, class: "button-2" %></span>
+                    <span style="color:#FFFFFF;"><%= link "Stop", to: "#", phx_click: "stop", phx_value_id: virtual_machine.id, phx_value_token: @api_token, class: "button-2" %></span>
               <% end %>
               <%= if String.contains? virtual_machine.status, "deallocated" do %>
                     <span><%= link "Start", to: "#", phx_click: "start", phx_value_id: virtual_machine.id, class: "button-2" %></span>

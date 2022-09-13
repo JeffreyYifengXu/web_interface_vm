@@ -2,7 +2,8 @@ defmodule AzureBillingDashboard.List_VMs do
   @moduledoc """
   The List_VMs context.
   """
-
+  import Plug.Conn
+  import Phoenix.Controller
   import Ecto.Query, warn: false
   alias AzureBillingDashboard.Repo
 
@@ -24,16 +25,8 @@ defmodule AzureBillingDashboard.List_VMs do
 
   """
   def list_virtualmachines do
-    HTTPoison.start
 
-    # Get Authorization
-    response = HTTPoison.post! "https://login.microsoftonline.com/{tenant_id}/oauth2/token", "grant_type=client_credentials&client_id=4bcba93a-6e11-417f-b4dc-224b008a7385&client_secret=oNH8Q~Gw6j0DKSEkJYlz2Cy65AkTxiPsoSLWKbiZ&resource=https%3A%2F%2Fmanagement.azure.com%2F", [{"Content-Type", "application/x-www-form-urlencoded"}]
-
-    {status, body} = Poison.decode(response.body)
-
-    IO.inspect(body["error"])
-    if !String.contains? body["error"], "invalid_request" do
-      token = body["access_token"]
+      token = fetch_cookies(@conn, signed: ~w(API_token))
 
       header = ['Authorization': "Bearer " <> token]
       # List VMs
@@ -64,7 +57,7 @@ defmodule AzureBillingDashboard.List_VMs do
           # vm = get_virtual_machine!()
         end
       end
-    end
+
 
     # IO.inspect(Repo.all(from p in VirtualMachine, order_by: [asc: p.status]))
     Repo.all(from p in VirtualMachine, order_by: [desc: p.status])
