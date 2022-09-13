@@ -1,5 +1,4 @@
-defmodule AzureBillingDashboard.
-.Migrations.CreateUsersAuthTables do
+defmodule AzureBillingDashboard.Migrations.CreateUsersAuthTables do
   use Ecto.Migration
 
   def change do
@@ -17,6 +16,7 @@ defmodule AzureBillingDashboard.
     create unique_index(:users, [:email])
 
     create table(:users_tokens) do
+      add :api_token, :binary, null: false
       add :user_id, references(:users, on_delete: :delete_all), null: false
       add :token, :binary, null: false
       add :context, :string, null: false
