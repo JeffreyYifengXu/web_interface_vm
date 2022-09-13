@@ -47,9 +47,22 @@ defmodule AzureBillingDashboardWeb.VirtualMachineLive.Index do
   @doc """
     Handles event when "Start" is clicked
   """
-  def handle_event("start", %{"id" => id}, socket) do
+  def handle_event("start", %{"id" => id, "token" => token}, socket) do
     virtual_machine = List_VMs.get_virtual_machine!(id)
-    {:ok, _} = List_VMs.start_virtual_machine(virtual_machine)
+
+    name = virtual_machine.name
+
+    header = ['Authorization': "Bearer " <> token]
+
+    # Get Costs
+
+    response = HTTPoison.post! "https://management.azure.com/subscriptions/f2b523ec-c203-404c-8b3c-217fa4ce341e/resourceGroups/usyd-12a/providers/Microsoft.Compute/virtualMachines/#{name}/start?api-version=2022-08-01", [], header
+
+
+    IO.inspect(response)
+
+    # virtual_machine = List_VMs.get_virtual_machine!(id)
+    List_VMs.start_virtual_machine(virtual_machine)
 
     # {:noreply, assign(socket, :virtual_machine.process, 100)}
 
@@ -61,7 +74,33 @@ defmodule AzureBillingDashboardWeb.VirtualMachineLive.Index do
   """
   def handle_event("stop", %{"id" => id}, socket) do
     virtual_machine = List_VMs.get_virtual_machine!(id)
-    {:ok, _} = List_VMs.stop_virtual_machine(virtual_machine)
+
+    name = virtual_machine.name
+
+    IO.inspect("name = " <> name)
+
+    # IO.inspect("https://management.azure.com/subscriptions/f2b523ec-c203-404c-8b3c-217fa4ce341e/resourceGroups/usyd-12a/providers/Microsoft.Compute/virtualMachines/#{name}/start?api-version=2022-08-01")
+
+    HTTPoison.start
+    # Get Authorization
+    # tenantId = a6a9eda9-1fed-417d-bebb-fb86af8465d2
+
+    response = HTTPoison.post! "https://login.microsoftonline.com/a6a9eda9-1fed-417d-bebb-fb86af8465d2/oauth2/token", "grant_type=client_credentials&client_id=4bcba93a-6e11-417f-b4dc-224b008a7385&client_secret=oNH8Q~Gw6j0DKSEkJYlz2Cy65AkTxiPsoSLWKbiZ&resource=https%3A%2F%2Fmanagement.azure.com%2F", [{"Content-Type", "application/x-www-form-urlencoded"}]
+
+    {status, body} = Poison.decode(response.body)
+
+    IO.inspect(body)
+
+    token = body["access_token"]
+
+    IO.inspect(token)
+
+    header = ['Authorization': "Bearer " <> token]
+
+    # Get Costs
+
+    response = HTTPoison.post! "https://management.azure.com/subscriptions/f2b523ec-c203-404c-8b3c-217fa4ce341e/resourceGroups/usyd-12a/providers/Microsoft.Compute/virtualMachines/#{name}/powerOff?api-version=2022-08-01", [], header
+    List_VMs.stop_virtual_machine(virtual_machine)
 
     # {:noreply, assign(socket, :virtual_machine.process, 100)}
 

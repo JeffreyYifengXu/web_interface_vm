@@ -20,7 +20,7 @@ defmodule AzureBillingDashboardWeb.Router do
   scope "/", AzureBillingDashboardWeb do
     pipe_through :browser
 
-    get "/", PageController, :index
+    # get "/", PageController, :index
     # live "/virtualmachines", VirtualMachineLive.Index, :index
     # live "/virtualmachines/new", VirtualMachineLive.Index, :new
     # live "/virtualmachines/:id/edit", VirtualMachineLive.Index, :edit
@@ -80,6 +80,8 @@ defmodule AzureBillingDashboardWeb.Router do
 
   scope "/", AzureBillingDashboardWeb do
     pipe_through [:browser, :require_authenticated_user]
+
+    get "/", PageController, :index
 
     live "/virtualmachines", VirtualMachineLive.Index, :index
     live "/virtualmachines/new", VirtualMachineLive.Index, :new

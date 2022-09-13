@@ -6,7 +6,7 @@ defmodule AzureBillingDashboard.Accounts do
   import Ecto.Query, warn: false
   alias AzureBillingDashboard.Repo
 
-  alias AzureBillingDashboard.Accounts.{User, UserToken, UserNotifier}
+  alias AzureBillingDashboard.Accounts.{User, UserToken}
 
   ## Database getters
 
@@ -41,7 +41,7 @@ defmodule AzureBillingDashboard.Accounts do
   def get_user_by_email_and_password(email, password)
       when is_binary(email) and is_binary(password) do
     user = Repo.get_by(User, email: email)
-    |> IO.inspect 
+    |> IO.inspect
     if User.valid_password?(user, password), do: user
   end
 
