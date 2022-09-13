@@ -49,10 +49,10 @@
                     </span>
                 </div>
             </td>
-            <%= if virtual_machine.status === "Running" do %>
+            <%= if String.contains? virtual_machine.status, "running" do %>
                 <td style="color:#00FF00"><%= virtual_machine.status %></td>
             <% end %>
-            <%= if virtual_machine.status === "Stopped" do %>
+            <%= if String.contains?(virtual_machine.status, "deallocated") or String.contains?(virtual_machine.status, "stopped") do %>
                 <td style="color:#FF0000"><%= virtual_machine.status %></td>
             <% end %>
 
@@ -61,10 +61,10 @@
             <td style="display:grid; grid-template-columns:1fr; width: 100%">
                   <span><%= live_redirect "Details", to: Routes.virtual_machine_show_path(@socket, :show, virtual_machine), class: "button-2" %></span>
 
-              <%= if virtual_machine.status === "Running" do %>
+              <%= if String.contains?(virtual_machine.status, "running") do %>
                     <span style="color:#FFFFFF;"><%= link "Stop", to: "#", phx_click: "stop", phx_value_id: virtual_machine.id, class: "button-2" %></span>
               <% end %>
-              <%= if virtual_machine.status === "Stopped" do %>
+              <%= if String.contains?(virtual_machine.status, "deallocated") or String.contains?(virtual_machine.status, "stopped") do %>
                     <span><%= link "Start", to: "#", phx_click: "start", phx_value_id: virtual_machine.id, class: "button-2" %></span>
               <% end %>
                   <span><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: virtual_machine.id, data: [confirm: "Are you sure?"], class: "button-3" %></span>

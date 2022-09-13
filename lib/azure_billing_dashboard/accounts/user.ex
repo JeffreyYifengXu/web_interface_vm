@@ -1,35 +1,15 @@
 defmodule AzureBillingDashboard.Accounts.User do
   use Ecto.Schema
   import Ecto.Changeset
-  import EctoEnum
-
-  defenum(RolesEnum, :role, [
-    :user,
-    :admin
-  ])
 
   schema "users" do
     field :email, :string
     field :password, :string, virtual: true, redact: true
     field :hashed_password, :string, redact: true
     field :confirmed_at, :naive_datetime
-    field :role, RolesEnum, default: :user
-
     timestamps()
-  end
-
-  @doc """
-  A user changeset for registering admins.
-  """
-  def admin_registration_changeset(user, attrs) do
-    user
-    |> registration_changeset(attrs)
-    |> prepare_changes(&set_admin_role/1)
-  end
-
-  defp set_admin_role(changeset) do
-    changeset
-    |> put_change(:role, :admin)
+    # field :sub_id, :string
+    # field :hashed_id, :string
   end
 
   @doc """
@@ -41,7 +21,6 @@ defmodule AzureBillingDashboard.Accounts.User do
   also be very expensive to hash for certain algorithms.
 
   ## Options
-
     * `:hash_password` - Hashes the password so it can be stored securely
       in the database and ensures the password field is cleared to prevent
       leaks in the logs. If password hashing is not needed and clearing the

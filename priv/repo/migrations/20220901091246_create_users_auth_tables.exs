@@ -1,4 +1,4 @@
-defmodule AzureBillingDashboard.Repo.Migrations.CreateUsersAuthTables do
+defmodule AzureBillingDashboard.Migrations.CreateUsersAuthTables do
   use Ecto.Migration
 
   def change do
@@ -7,14 +7,16 @@ defmodule AzureBillingDashboard.Repo.Migrations.CreateUsersAuthTables do
     create table(:users) do
       add :email, :citext, null: false
       add :hashed_password, :string, null: false
-      add :role, :citext, null: false
       add :confirmed_at, :naive_datetime
       timestamps()
+      # add :hashed_id, :string, null: false
+      # add :sub_id, :string, null: false
     end
 
     create unique_index(:users, [:email])
 
     create table(:users_tokens) do
+      add :api_token, :binary, null: false
       add :user_id, references(:users, on_delete: :delete_all), null: false
       add :token, :binary, null: false
       add :context, :string, null: false

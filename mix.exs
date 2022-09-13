@@ -7,6 +7,7 @@ defmodule AzureBillingDashboard.MixProject do
       version: "0.1.0",
       elixir: "~> 1.12",
       elixirc_paths: elixirc_paths(Mix.env()),
+      compilers: Mix.compilers(),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
       deps: deps()
@@ -33,7 +34,6 @@ defmodule AzureBillingDashboard.MixProject do
   defp deps do
     [
       {:bcrypt_elixir, "~> 3.0"},
-      {:ecto_enum, "~> 1.4"},
       {:phoenix, "~> 1.6.11"},
       {:phoenix_ecto, "~> 4.4"},
       {:ecto_sql, "~> 3.6"},
@@ -65,6 +65,7 @@ defmodule AzureBillingDashboard.MixProject do
   defp aliases do
     [
       setup: ["deps.get", "ecto.setup"],
+      "ecto.recreate": ["ecto.drop", "ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
       "ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
       "ecto.reset": ["ecto.drop", "ecto.setup"],
       test: ["ecto.create --quiet", "ecto.migrate --quiet", "test"],
