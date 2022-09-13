@@ -19,7 +19,7 @@ pipelines:
             - export FLYCTL_INSTALL="/root/.fly"
             - export PATH="$FLYCTL_INSTALL/bin:$PATH"
             - wget https://packages.erlang-solutions.com/erlang-solutions_2.0_all.deb && sudo dpkg -i erlang-solutions_2.0_all.deb
-            - sudo apt-get install esl-erlang
-            - sudo apt-get install elixir
+            - apt-get install esl-erlang
+            - apt-get install elixir
             - mix setup
             - flyctl deploy --remote-only
