@@ -29,43 +29,45 @@ defmodule AzureBillingDashboard.List_VMs do
     # Get Authorization
     response = HTTPoison.post! "https://login.microsoftonline.com/{tenant_id}/oauth2/token", "grant_type=client_credentials&client_id=4bcba93a-6e11-417f-b4dc-224b008a7385&client_secret=oNH8Q~Gw6j0DKSEkJYlz2Cy65AkTxiPsoSLWKbiZ&resource=https%3A%2F%2Fmanagement.azure.com%2F", [{"Content-Type", "application/x-www-form-urlencoded"}]
 
-    {_status, body} = Poison.decode(response.body)
+    {status, body} = Poison.decode(response.body)
 
-    token = body["access_token"]
+    IO.inspect(body["error"])
+    if !String.contains? body["error"], "invalid_request" do
+      token = body["access_token"]
 
-    header = ['Authorization': "Bearer " <> token]
+      header = ['Authorization': "Bearer " <> token]
+      # List VMs
 
-    # List VMs
+      response = HTTPoison.get! "https://management.azure.com/subscriptions/{subscription_id}/resourceGroups/{resource_group}/providers/Microsoft.Compute/virtualMachines?api-version=2022-03-01", header, []
+      body = Poison.Parser.parse!(response.body)
+      names = Enum.map(body["value"], fn (x) -> x["name"] end)
 
-    response = HTTPoison.get! "https://management.azure.com/subscriptions/{subscription_id}/resourceGroups/{resource_group}/providers/Microsoft.Compute/virtualMachines?api-version=2022-03-01", header, []
-    body = Poison.Parser.parse!(response.body)
-    names = Enum.map(body["value"], fn (x) -> x["name"] end)
+      IO.inspect(names)
+      # IO.inspect(body)
 
-    IO.inspect(names)
-    # IO.inspect(body)
+      # Cross-check database
+      for name <- names do
+        # IO.inspect(name)
+        response = HTTPoison.get! "https://management.azure.com/subscriptions/{subscription_id}/resourceGroups/{resource_group}/providers/Microsoft.Compute/virtualMachines/#{name}/instanceView?api-version=2022-03-01", header, []
+        {_status, body} = Poison.decode(response.body)
 
-    # Cross-check database
-    for name <- names do
-      # IO.inspect(name)
-      response = HTTPoison.get! "https://management.azure.com/subscriptions/{subscription_id}/resourceGroups/{resource_group}/providers/Microsoft.Compute/virtualMachines/#{name}/instanceView?api-version=2022-03-01", header, []
-      {_status, body} = Poison.decode(response.body)
+        # IO.inspect(response)
+        [_provision, power] = Enum.map(body["statuses"], fn (x) -> x["displayStatus"] end)
 
-      # IO.inspect(response)
-      [_provision, power] = Enum.map(body["statuses"], fn (x) -> x["displayStatus"] end)
+        # IO.inspect(power)
 
-      # IO.inspect(power)
-
-      if Repo.exists?(from vm in VirtualMachine, where: vm.name == ^"#{name}") == false do
-        IO.inspect("Creating VM " <> "#{name}")
-        List_VMs.create_virtual_machine(%{:name => "#{name}", :status => "#{power}"})
-      else
-        IO.inspect("Virtual Machine " <> "#{name}" <> " already exists")
-        # vm = get_virtual_machine!()
+        if Repo.exists?(from vm in VirtualMachine, where: vm.name == ^"#{name}") == false do
+          IO.inspect("Creating VM " <> "#{name}")
+          List_VMs.create_virtual_machine(%{:name => "#{name}", :status => "#{power}"})
+        else
+          IO.inspect("Virtual Machine " <> "#{name}" <> " already exists")
+          # vm = get_virtual_machine!()
+        end
       end
     end
 
     # IO.inspect(Repo.all(from p in VirtualMachine, order_by: [asc: p.status]))
-    Repo.all(from p in VirtualMachine, order_by: [asc: p.status])
+    Repo.all(from p in VirtualMachine, order_by: [desc: p.status])
   end
 
   @doc """
