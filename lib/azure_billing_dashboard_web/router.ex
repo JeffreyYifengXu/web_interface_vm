@@ -1,6 +1,8 @@
 defmodule AzureBillingDashboardWeb.Router do
   use AzureBillingDashboardWeb, :router
 
+  import AzureBillingDashboardWeb.UserAuth
+
   pipeline :browser do
     plug :accepts, ["html"]
     plug :fetch_session
@@ -8,6 +10,7 @@ defmodule AzureBillingDashboardWeb.Router do
     plug :put_root_layout, {AzureBillingDashboardWeb.LayoutView, :root}
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+    plug :fetch_current_user
   end
 
   pipeline :api do
@@ -18,13 +21,13 @@ defmodule AzureBillingDashboardWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :index
-    live "/virtualmachines", VirtualMachineLive.Index, :index
-    live "/virtualmachines/new", VirtualMachineLive.Index, :new
-    live "/virtualmachines/:id/edit", VirtualMachineLive.Index, :edit
-    # live "/virtualmachines/:id/start", VirtualMachineLive.Index, :start
-
-    live "/virtualmachines/:id", VirtualMachineLive.Show, :show
-    live "/virtualmachines/:id/show/edit", VirtualMachineLive.Show, :edit
+    # live "/virtualmachines", VirtualMachineLive.Index, :index
+    # live "/virtualmachines/new", VirtualMachineLive.Index, :new
+    # live "/virtualmachines/:id/edit", VirtualMachineLive.Index, :edit
+    # # live "/virtualmachines/:id/start", VirtualMachineLive.Index, :start
+    #
+    # live "/virtualmachines/:id", VirtualMachineLive.Show, :show
+    # live "/virtualmachines/:id/show/edit", VirtualMachineLive.Show, :edit
   end
 
   # Other scopes may use custom stacks.
@@ -60,5 +63,48 @@ defmodule AzureBillingDashboardWeb.Router do
 
       forward "/mailbox", Plug.Swoosh.MailboxPreview
     end
+  end
+
+  ## Authentication routes
+
+  scope "/", AzureBillingDashboardWeb do
+    pipe_through [:browser, :redirect_if_user_is_authenticated]
+
+    get "/users/log_in", UserSessionController, :new
+    post "/users/log_in", UserSessionController, :create
+    # get "/users/reset_password", UserResetPasswordController, :new
+    # post "/users/reset_password", UserResetPasswordController, :create
+    # get "/users/reset_password/:token", UserResetPasswordController, :edit
+    # put "/users/reset_password/:token", UserResetPasswordController, :update
+  end
+
+  scope "/", AzureBillingDashboardWeb do
+    pipe_through [:browser, :require_authenticated_user]
+
+    live "/virtualmachines", VirtualMachineLive.Index, :index
+    live "/virtualmachines/new", VirtualMachineLive.Index, :new
+    live "/virtualmachines/:id/edit", VirtualMachineLive.Index, :edit
+    live "/virtualmachines/:id/start", VirtualMachineLive.Index, :start
+
+    live "/virtualmachines/:id", VirtualMachineLive.Show, :show
+    live "/virtualmachines/:id/show/edit", VirtualMachineLive.Show, :edit
+
+    get "/users/settings", UserSettingsController, :edit
+    put "/users/settings/update_password", UserSettingsController, :update_password
+    put "/users/settings/update_email", UserSettingsController, :update_email
+    get "/users/settings/confirm_email/:token", UserSettingsController, :confirm_email
+
+
+    live "/", PageLive, :index
+  end
+
+  scope "/", AzureBillingDashboardWeb do
+    pipe_through [:browser]
+
+    delete "/users/log_out", UserSessionController, :delete
+    # get "/users/confirm", UserConfirmationController, :new
+    # post "/users/confirm", UserConfirmationController, :create
+    # get "/users/confirm/:token", UserConfirmationController, :edit
+    # post "/users/confirm/:token", UserConfirmationController, :update
   end
 end
