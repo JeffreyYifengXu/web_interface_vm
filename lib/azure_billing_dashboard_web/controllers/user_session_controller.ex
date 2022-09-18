@@ -3,6 +3,7 @@ defmodule AzureBillingDashboardWeb.UserSessionController do
 
   alias AzureBillingDashboard.Accounts
   alias AzureBillingDashboardWeb.UserAuth
+  alias AzureAPI.VirtualMachineController
 
   def new(conn, _params) do
     render(conn, "new.html", error_message: nil)
