@@ -4,6 +4,8 @@ defmodule AzureAPI.VirtualMachineController do
 
     use GenServer
 
+    ########### GENSERVER ####################################################
+    ########## GENSERVER CLIENT ###############
     def start_link do
         GenServer.start_link(__MODULE__, [], name: :virtual_machine_controller)
     end
@@ -19,6 +21,12 @@ defmodule AzureAPI.VirtualMachineController do
     def stop_virtual_machine(name) do
         GenServer.call(:virtual_machine_controller, {:stop_virtual_machine, name})
     end
+
+    def get_cost_data(name) do
+        GenServer.call(:virtual_machine_controller, {:get_cost_data, name})
+    end
+
+    ########## GENSERVER SERVER CALLBACKS ########################
 
     # Callbacks
     def handle_call({:get_virtual_machines}, _from, data) do
@@ -58,10 +66,22 @@ defmodule AzureAPI.VirtualMachineController do
         {:reply, token, token}
     end
 
+    def handle_call({:get_cost_data, name}, _from, token) do
+
+        # Call Start Function
+        data = get_azure_cost_data(name, token)
+
+        {:reply, data, token}
+    end
+
     def init(_) do
         token = get_token()
         {:ok, token}
     end
+
+    ################ END GENSERVER #######################
+
+    ################ API FUNCTIONS #######################
 
     def get_token() do
         # Call Token Endpoint
@@ -74,6 +94,8 @@ defmodule AzureAPI.VirtualMachineController do
 
         token
     end
+
+    # LIST AZURE MACHINES
 
     def list_azure_machines_and_statuses(token) do
         # Construct Header
@@ -106,6 +128,8 @@ defmodule AzureAPI.VirtualMachineController do
 
     end
 
+    # START AZURE MACHINES
+
     def start_azure_machine(name, token) do
 
         # Construct Header
@@ -114,6 +138,8 @@ defmodule AzureAPI.VirtualMachineController do
         # Call Start Endpoint
         HTTPoison.post! "https://management.azure.com/subscriptions/f2b523ec-c203-404c-8b3c-217fa4ce341e/resourceGroups/usyd-12a/providers/Microsoft.Compute/virtualMachines/#{name}/start?api-version=2022-08-01", [], header
     end
+
+    # STOP AZURE MACHINES
 
     def stop_azure_machine(name, token) do
 
@@ -124,4 +150,61 @@ defmodule AzureAPI.VirtualMachineController do
         HTTPoison.post! "https://management.azure.com/subscriptions/f2b523ec-c203-404c-8b3c-217fa4ce341e/resourceGroups/usyd-12a/providers/Microsoft.Compute/virtualMachines/#{name}/powerOff?api-version=2022-08-01", [], header
     end
 
+    # GET COST DATA
+    """
+    TO CALL THIS FUNCTION, CALL THE GENSERVER FUNCTION
+
+    For example, needed in the details page
+
+    eg -> response = AzureAPI.VirtualMachineController.get_cost_data(vmName).
+    get_cost_data/1 grabs the token from the genserver and sends it to this function along with the vmName
+    """
+
+    def get_azure_cost_data(name, token) do
+
+        # Construct Header
+        header = ['Authorization': "Bearer " <> token, 'content-type': "application/json"]
+
+        scope = "subscriptions/f2b523ec-c203-404c-8b3c-217fa4ce341e/resourceGroups/usyd-12a"
+
+        body = %{
+            :type => "Usage",
+            :timeframe => "MonthToDate",
+            :dataset => %{
+                :granularity => "Daily",
+                :filter => %{
+                    :dimensions => %{
+                        :name => "ResourceId",
+                        :operator => "In",
+                        :values => [
+                            "/subscriptions/f2b523ec-c203-404c-8b3c-217fa4ce341e/resourcegroups/usyd-12a/providers/microsoft.compute/virtualmachines/#{name}"
+                        ]
+                    }
+                },
+                :grouping => [
+                    %{
+                        :type => "Dimension",
+                        :name => "ResourceId"
+                    }
+                ],
+                :aggregation => %{
+                    :totalCost => %{
+                        :name => "PreTaxCost",
+                        :function => "sum"
+                    }
+                }
+            }
+        }
+
+        # Call Start Endpoint
+        response = HTTPoison.post! "https://management.azure.com/#{scope}/providers/Microsoft.CostManagement/query?api-version=2021-10-01", Poison.encode!(body), header
+
+        # Return decoded body
+        Poison.decode! response.body
+
+
+
+        # "https://management.azure.com/#{scope}/providers/Microsoft.CostManagement/query?api-version=2021-10-01"
+
+    end
 end
