@@ -2,6 +2,7 @@ defmodule AzureBillingDashboardWeb.UserAuth do
   import Plug.Conn
   import Phoenix.Controller
 
+  alias AzureAPI.VirtualMachineController
   alias AzureBillingDashboard.Accounts
   alias AzureBillingDashboardWeb.Router.Helpers, as: Routes
 
@@ -27,6 +28,7 @@ defmodule AzureBillingDashboardWeb.UserAuth do
   def log_in_user(conn, user, params \\ %{}) do
     token = Accounts.generate_user_session_token(user)
     user_return_to = get_session(conn, :user_return_to)
+    VirtualMachineController.start_link()
 
     conn
     |> renew_session()
@@ -34,6 +36,8 @@ defmodule AzureBillingDashboardWeb.UserAuth do
     |> put_session(:live_socket_id, "users_sessions:#{Base.url_encode64(token)}")
     |> maybe_write_remember_me_cookie(token, params)
     |> redirect(to: "/virtualmachines")
+
+
   end
 
   defp maybe_write_remember_me_cookie(conn, token, %{"remember_me" => "true"}) do
@@ -145,5 +149,5 @@ defmodule AzureBillingDashboardWeb.UserAuth do
 
   defp maybe_store_return_to(conn), do: conn
 
-  defp signed_in_path(_conn), do: "/"
+  defp signed_in_path(_conn), do: ""
 end
