@@ -3,7 +3,7 @@
 # -----
 # You can specify a custom docker image from Docker Hub as your build environment.
 
-image: https://hub.docker.com/_/debian?tab=tags&page=1&name=bullseye-20210902-slim
+image: atlassian/default-image:3
 
 pipelines:
   
