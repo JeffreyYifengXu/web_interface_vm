@@ -14,6 +14,10 @@ defmodule AzureAPI.VirtualMachineController do
       GenServer.call(:virtual_machine_controller, {:get_virtual_machines})
     end
 
+	def get_availability() do
+		GenServer.call(:virtual_machine_controller, {:get_availability})
+	end
+
     def start_virtual_machine(name) do
       GenServer.call(:virtual_machine_controller, {:start_virtual_machine, name})
     end
@@ -48,6 +52,13 @@ defmodule AzureAPI.VirtualMachineController do
         # IO.inspect(body)
 
     end
+
+	def handle_call({:get_availability}, _from, token) do
+		# Call availability function
+		data = get_availability(token)
+		
+		{:reply, data, token}
+	end
 
     def handle_call({:start_virtual_machine, name}, _from, token) do
 
@@ -124,10 +135,29 @@ defmodule AzureAPI.VirtualMachineController do
            {:error, response.status_code}
         end
 
-
-
     end
 
+	# GET AZURE AVAILABILITIES
+
+	def get_availability(token) do
+		# Construct header
+		header = ['Authorization': "Bearer " <> token]
+
+		response = HTTPoison.get! "https://management.azure.com/subscriptions/f2b523ec-c203-404c-8b3c-217fa4ce341e/providers/Microsoft.ResourceHealth/availabilityStatuses/current?api-version=2022-03-01", header, []
+
+		IO.inspect(response.status_code)
+		if response.status_code == 200 do
+			body = Poison.Parser.parse!(response.body)
+
+			statuses = Enum.map(body["value"], fn (x) -> {x["properties"]["availabilityState"], x["properties"]["summary"]} end)
+			IO.inspect(statuses)
+			
+			{:ok, statuses}
+		else
+			{:error, response.status_code}
+		end
+	end
+		
     # START AZURE MACHINES
 
     def start_azure_machine(name, token) do
