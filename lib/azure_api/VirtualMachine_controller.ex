@@ -133,9 +133,8 @@ defmodule AzureAPI.VirtualMachineController do
         else
            {:error, response.status_code}
         end
-<<<<<<< HEAD
     end
-=======
+
 
     end
 
@@ -150,7 +149,6 @@ defmodule AzureAPI.VirtualMachineController do
 		IO.inspect(response.status_code)
 		if response.status_code == 200 do
 			body = Poison.Parser.parse!(response.body)
->>>>>>> ef7cb7088b1b31201d16dab542fd2b100bb1a4f5
 
 			statuses = Enum.map(body["value"], fn (x) -> {x["properties"]["availabilityState"], x["properties"]["summary"]} end)
 			IO.inspect(statuses)
