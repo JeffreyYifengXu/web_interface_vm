@@ -96,7 +96,6 @@ defmodule AzureAPI.VirtualMachineController do
     end
 
     # LIST AZURE MACHINES
-
     def list_azure_machines_and_statuses(token) do
         # Construct Header
         header = ['Authorization': "Bearer " <> token]
@@ -123,9 +122,6 @@ defmodule AzureAPI.VirtualMachineController do
         else
            {:error, response.status_code}
         end
-
-
-
     end
 
     # START AZURE MACHINES
@@ -201,9 +197,6 @@ defmodule AzureAPI.VirtualMachineController do
 
         # Return decoded body
         Poison.decode! response.body
-
-
-
         # "https://management.azure.com/#{scope}/providers/Microsoft.CostManagement/query?api-version=2021-10-01"
 
     end
