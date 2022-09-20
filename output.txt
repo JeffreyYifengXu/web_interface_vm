@@ -1,0 +1,137 @@
+.."Start Test"
+%{
+  "access_token" => "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6IjJaUXBKM1VwYmpBWVhZR2FYRUpsOGxWMFRPSSIsImtpZCI6IjJaUXBKM1VwYmpBWVhZR2FYRUpsOGxWMFRPSSJ9.eyJhdWQiOiJodHRwczovL21hbmFnZW1lbnQuYXp1cmUuY29tLyIsImlzcyI6Imh0dHBzOi8vc3RzLndpbmRvd3MubmV0L2E2YTllZGE5LTFmZWQtNDE3ZC1iZWJiLWZiODZhZjg0NjVkMi8iLCJpYXQiOjE2NjMxMTAxMjEsIm5iZiI6MTY2MzExMDEyMSwiZXhwIjoxNjYzMTE0MDIxLCJhaW8iOiJFMlpnWVBocXBIa3l1c0Q4dlV2RmdwOEZzejN6QUE9PSIsImFwcGlkIjoiNGJjYmE5M2EtNmUxMS00MTdmLWI0ZGMtMjI0YjAwOGE3Mzg1IiwiYXBwaWRhY3IiOiIxIiwiaWRwIjoiaHR0cHM6Ly9zdHMud2luZG93cy5uZXQvYTZhOWVkYTktMWZlZC00MTdkLWJlYmItZmI4NmFmODQ2NWQyLyIsImlkdHlwIjoiYXBwIiwib2lkIjoiNDM5NTE0ZmUtYmZjZi00ZjQ1LTlmYTQtNzVmNDZjMjUxODZmIiwicmgiOiIwLkFVSUFxZTJwcHUwZmZVRy11X3VHcjRSbDBrWklmM2tBdXRkUHVrUGF3ZmoyTUJOQ0FBQS4iLCJzdWIiOiI0Mzk1MTRmZS1iZmNmLTRmNDUtOWZhNC03NWY0NmMyNTE4NmYiLCJ0aWQiOiJhNmE5ZWRhOS0xZmVkLTQxN2QtYmViYi1mYjg2YWY4NDY1ZDIiLCJ1dGkiOiJiQ3ZJMEU1YUNVdUVHcE1mZDFNWkFBIiwidmVyIjoiMS4wIiwieG1zX3RjZHQiOjE2NDk5MTU0MzB9.L5pDj9aWRMbDCW-1PDYrKfgxu5HwZPSgRBgah1-OMjhbBpKfEs_tSir3WIRM3UZ90nMca8c2ZG4j6rK-Ebrh2SHHepjHlnvQDVQXDBdHs1GKsWK-wSL-ClcJGCrxS1UDsbLm9z5gXthNhwfVhsvDxW48m6lH8G28TZkT1QPpp-YQFEnixFsBaeNJjKC8gOfnQicfSyvzFeVQUrOIB7Aa0EJig99MHNmTItlPF4S9GNkb9xowWB_iWk1saz4opMc5RXvyQvODAxy7Lp4ievkg6Ap4z2QxQs_UKRmiYnLZzqDEBglFM2uzvZF0q1tYXhMhx_1E51KPFgU81Eu_AGMCwg",
+  "expires_in" => "3599",
+  "expires_on" => "1663114021",
+  "ext_expires_in" => "3599",
+  "not_before" => "1663110121",
+  "resource" => "https://management.azure.com/",
+  "token_type" => "Bearer"
+}
+"eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6IjJaUXBKM1VwYmpBWVhZR2FYRUpsOGxWMFRPSSIsImtpZCI6IjJaUXBKM1VwYmpBWVhZR2FYRUpsOGxWMFRPSSJ9.eyJhdWQiOiJodHRwczovL21hbmFnZW1lbnQuYXp1cmUuY29tLyIsImlzcyI6Imh0dHBzOi8vc3RzLndpbmRvd3MubmV0L2E2YTllZGE5LTFmZWQtNDE3ZC1iZWJiLWZiODZhZjg0NjVkMi8iLCJpYXQiOjE2NjMxMTAxMjEsIm5iZiI6MTY2MzExMDEyMSwiZXhwIjoxNjYzMTE0MDIxLCJhaW8iOiJFMlpnWVBocXBIa3l1c0Q4dlV2RmdwOEZzejN6QUE9PSIsImFwcGlkIjoiNGJjYmE5M2EtNmUxMS00MTdmLWI0ZGMtMjI0YjAwOGE3Mzg1IiwiYXBwaWRhY3IiOiIxIiwiaWRwIjoiaHR0cHM6Ly9zdHMud2luZG93cy5uZXQvYTZhOWVkYTktMWZlZC00MTdkLWJlYmItZmI4NmFmODQ2NWQyLyIsImlkdHlwIjoiYXBwIiwib2lkIjoiNDM5NTE0ZmUtYmZjZi00ZjQ1LTlmYTQtNzVmNDZjMjUxODZmIiwicmgiOiIwLkFVSUFxZTJwcHUwZmZVRy11X3VHcjRSbDBrWklmM2tBdXRkUHVrUGF3ZmoyTUJOQ0FBQS4iLCJzdWIiOiI0Mzk1MTRmZS1iZmNmLTRmNDUtOWZhNC03NWY0NmMyNTE4NmYiLCJ0aWQiOiJhNmE5ZWRhOS0xZmVkLTQxN2QtYmViYi1mYjg2YWY4NDY1ZDIiLCJ1dGkiOiJiQ3ZJMEU1YUNVdUVHcE1mZDFNWkFBIiwidmVyIjoiMS4wIiwieG1zX3RjZHQiOjE2NDk5MTU0MzB9.L5pDj9aWRMbDCW-1PDYrKfgxu5HwZPSgRBgah1-OMjhbBpKfEs_tSir3WIRM3UZ90nMca8c2ZG4j6rK-Ebrh2SHHepjHlnvQDVQXDBdHs1GKsWK-wSL-ClcJGCrxS1UDsbLm9z5gXthNhwfVhsvDxW48m6lH8G28TZkT1QPpp-YQFEnixFsBaeNJjKC8gOfnQicfSyvzFeVQUrOIB7Aa0EJig99MHNmTItlPF4S9GNkb9xowWB_iWk1saz4opMc5RXvyQvODAxy7Lp4ievkg6Ap4z2QxQs_UKRmiYnLZzqDEBglFM2uzvZF0q1tYXhMhx_1E51KPFgU81Eu_AGMCwg"
+%HTTPoison.Response{
+  body: "",
+  headers: [
+    {"Cache-Control", "no-cache"},
+    {"Pragma", "no-cache"},
+    {"Expires", "-1"},
+    {"Location",
+     "https://management.azure.com/subscriptions/f2b523ec-c203-404c-8b3c-217fa4ce341e/providers/Microsoft.Compute/locations/eastus/operations/477d6f47-4216-4398-af4a-41f66853f22b?p=b27e2b02-2e7f-4e8d-a8f0-e94b1f194b5f&monitor=true&api-version=2022-03-01"},
+    {"Retry-After", "10"},
+    {"Azure-AsyncOperation",
+     "https://management.azure.com/subscriptions/f2b523ec-c203-404c-8b3c-217fa4ce341e/providers/Microsoft.Compute/locations/eastus/operations/477d6f47-4216-4398-af4a-41f66853f22b?p=b27e2b02-2e7f-4e8d-a8f0-e94b1f194b5f&api-version=2022-03-01"},
+    {"x-ms-ratelimit-remaining-resource",
+     "Microsoft.Compute/UpdateVM3Min;239,Microsoft.Compute/UpdateVM30Min;1198"},
+    {"Strict-Transport-Security", "max-age=31536000; includeSubDomains"},
+    {"x-ms-request-id", "477d6f47-4216-4398-af4a-41f66853f22b"},
+    {"Server", "Microsoft-HTTPAPI/2.0"},
+    {"Server", "Microsoft-HTTPAPI/2.0"},
+    {"x-ms-ratelimit-remaining-subscription-writes", "1199"},
+    {"x-ms-correlation-request-id", "36c8cd65-71f0-4f61-9ec5-da34f78d722e"},
+    {"x-ms-routing-request-id",
+     "AUSTRALIAEAST:20220913T230704Z:36c8cd65-71f0-4f61-9ec5-da34f78d722e"},
+    {"X-Content-Type-Options", "nosniff"},
+    {"Date", "Tue, 13 Sep 2022 23:07:04 GMT"},
+    {"Content-Length", "0"}
+  ],
+  request: %HTTPoison.Request{
+    body: [],
+    headers: [
+      Authorization: "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6IjJaUXBKM1VwYmpBWVhZR2FYRUpsOGxWMFRPSSIsImtpZCI6IjJaUXBKM1VwYmpBWVhZR2FYRUpsOGxWMFRPSSJ9.eyJhdWQiOiJodHRwczovL21hbmFnZW1lbnQuYXp1cmUuY29tLyIsImlzcyI6Imh0dHBzOi8vc3RzLndpbmRvd3MubmV0L2E2YTllZGE5LTFmZWQtNDE3ZC1iZWJiLWZiODZhZjg0NjVkMi8iLCJpYXQiOjE2NjMxMTAxMjEsIm5iZiI6MTY2MzExMDEyMSwiZXhwIjoxNjYzMTE0MDIxLCJhaW8iOiJFMlpnWVBocXBIa3l1c0Q4dlV2RmdwOEZzejN6QUE9PSIsImFwcGlkIjoiNGJjYmE5M2EtNmUxMS00MTdmLWI0ZGMtMjI0YjAwOGE3Mzg1IiwiYXBwaWRhY3IiOiIxIiwiaWRwIjoiaHR0cHM6Ly9zdHMud2luZG93cy5uZXQvYTZhOWVkYTktMWZlZC00MTdkLWJlYmItZmI4NmFmODQ2NWQyLyIsImlkdHlwIjoiYXBwIiwib2lkIjoiNDM5NTE0ZmUtYmZjZi00ZjQ1LTlmYTQtNzVmNDZjMjUxODZmIiwicmgiOiIwLkFVSUFxZTJwcHUwZmZVRy11X3VHcjRSbDBrWklmM2tBdXRkUHVrUGF3ZmoyTUJOQ0FBQS4iLCJzdWIiOiI0Mzk1MTRmZS1iZmNmLTRmNDUtOWZhNC03NWY0NmMyNTE4NmYiLCJ0aWQiOiJhNmE5ZWRhOS0xZmVkLTQxN2QtYmViYi1mYjg2YWY4NDY1ZDIiLCJ1dGkiOiJiQ3ZJMEU1YUNVdUVHcE1mZDFNWkFBIiwidmVyIjoiMS4wIiwieG1zX3RjZHQiOjE2NDk5MTU0MzB9.L5pDj9aWRMbDCW-1PDYrKfgxu5HwZPSgRBgah1-OMjhbBpKfEs_tSir3WIRM3UZ90nMca8c2ZG4j6rK-Ebrh2SHHepjHlnvQDVQXDBdHs1GKsWK-wSL-ClcJGCrxS1UDsbLm9z5gXthNhwfVhsvDxW48m6lH8G28TZkT1QPpp-YQFEnixFsBaeNJjKC8gOfnQicfSyvzFeVQUrOIB7Aa0EJig99MHNmTItlPF4S9GNkb9xowWB_iWk1saz4opMc5RXvyQvODAxy7Lp4ievkg6Ap4z2QxQs_UKRmiYnLZzqDEBglFM2uzvZF0q1tYXhMhx_1E51KPFgU81Eu_AGMCwg"
+    ],
+    method: :post,
+    options: [],
+    params: %{},
+    url: "https://management.azure.com/subscriptions/f2b523ec-c203-404c-8b3c-217fa4ce341e/resourceGroups/usyd-12a/providers/Microsoft.Compute/virtualMachines/Test-VM-1/start?api-version=2022-03-01"
+  },
+  request_url: "https://management.azure.com/subscriptions/f2b523ec-c203-404c-8b3c-217fa4ce341e/resourceGroups/usyd-12a/providers/Microsoft.Compute/virtualMachines/Test-VM-1/start?api-version=2022-03-01",
+  status_code: 202
+}
+....."invalid_request"
+....["Test-VM-1", "Test-VM-2"]
+.
+
+  1) test Show updates virtual_machine within modal (AzureBillingDashboardWeb.VirtualMachineLiveTest)
+     test/azure_billing_dashboard_web/live/virtual_machine_live_test.exs:89
+     ** (MatchError) no match of right hand side value: {:error, {:redirect, %{flash: %{"error" => "You must log in to access this page."}, to: "/users/log_in"}}}
+     code: {:ok, show_live, _html} = live(conn, Routes.virtual_machine_show_path(conn, :show, virtual_machine))
+     stacktrace:
+       test/azure_billing_dashboard_web/live/virtual_machine_live_test.exs:90: (test)
+
+
+
+  2) test Index updates virtual_machine in listing (AzureBillingDashboardWeb.VirtualMachineLiveTest)
+     test/azure_billing_dashboard_web/live/virtual_machine_live_test.exs:49
+     ** (MatchError) no match of right hand side value: {:error, {:redirect, %{flash: %{"error" => "You must log in to access this page."}, to: "/users/log_in"}}}
+     code: {:ok, index_live, _html} = live(conn, Routes.virtual_machine_index_path(conn, :index))
+     stacktrace:
+       test/azure_billing_dashboard_web/live/virtual_machine_live_test.exs:50: (test)
+
+
+
+  3) test Index lists all virtualmachines (AzureBillingDashboardWeb.VirtualMachineLiveTest)
+     test/azure_billing_dashboard_web/live/virtual_machine_live_test.exs:19
+     ** (MatchError) no match of right hand side value: {:error, {:redirect, %{flash: %{"error" => "You must log in to access this page."}, to: "/users/log_in"}}}
+     code: {:ok, _index_live, html} = live(conn, Routes.virtual_machine_index_path(conn, :index))
+     stacktrace:
+       test/azure_billing_dashboard_web/live/virtual_machine_live_test.exs:20: (test)
+
+
+
+  4) test Index deletes virtual_machine in listing (AzureBillingDashboardWeb.VirtualMachineLiveTest)
+     test/azure_billing_dashboard_web/live/virtual_machine_live_test.exs:71
+     ** (MatchError) no match of right hand side value: {:error, {:redirect, %{flash: %{"error" => "You must log in to access this page."}, to: "/users/log_in"}}}
+     code: {:ok, index_live, _html} = live(conn, Routes.virtual_machine_index_path(conn, :index))
+     stacktrace:
+       test/azure_billing_dashboard_web/live/virtual_machine_live_test.exs:72: (test)
+
+
+
+  5) test Index saves new virtual_machine (AzureBillingDashboardWeb.VirtualMachineLiveTest)
+     test/azure_billing_dashboard_web/live/virtual_machine_live_test.exs:27
+     ** (MatchError) no match of right hand side value: {:error, {:redirect, %{flash: %{"error" => "You must log in to access this page."}, to: "/users/log_in"}}}
+     code: {:ok, index_live, _html} = live(conn, Routes.virtual_machine_index_path(conn, :index))
+     stacktrace:
+       test/azure_billing_dashboard_web/live/virtual_machine_live_test.exs:28: (test)
+
+
+
+  6) test Show displays virtual_machine (AzureBillingDashboardWeb.VirtualMachineLiveTest)
+     test/azure_billing_dashboard_web/live/virtual_machine_live_test.exs:82
+     ** (MatchError) no match of right hand side value: {:error, {:redirect, %{flash: %{"error" => "You must log in to access this page."}, to: "/users/log_in"}}}
+     code: {:ok, _show_live, html} = live(conn, Routes.virtual_machine_show_path(conn, :show, virtual_machine))
+     stacktrace:
+       test/azure_billing_dashboard_web/live/virtual_machine_live_test.exs:83: (test)
+
+
+
+  7) test user testing changeset with invalid attributes (AzureBillingDashboard.ShowTest)
+     test/azure_billing_dashboard/accounts/user_test.exs:20
+     ** (UndefinedFunctionError) function AzureBillingDashboard.Accounts.User.changeset/2 is undefined or private. Did you mean:
+     
+           * __changeset__/0
+     
+     code: changeset = User.changeset(%User{}, @invalid_attrs)
+     stacktrace:
+       (azure_billing_dashboard 0.1.0) AzureBillingDashboard.Accounts.User.changeset(#AzureBillingDashboard.Accounts.User<__meta__: #Ecto.Schema.Metadata<:built, "users">, confirmed_at: nil, email: nil, id: nil, inserted_at: nil, updated_at: nil, ...>, %{email: "musasrdhotmail.com"})
+       test/azure_billing_dashboard/accounts/user_test.exs:21: (test)
+
+
+
+  8) test user testing changeset with valid attributes (AzureBillingDashboard.ShowTest)
+     test/azure_billing_dashboard/accounts/user_test.exs:15
+     ** (UndefinedFunctionError) function AzureBillingDashboard.Accounts.User.changeset/2 is undefined or private. Did you mean:
+     
+           * __changeset__/0
+     
+     code: changeset = User.changeset(%User{}, @valid_attrs)
+     stacktrace:
+       (azure_billing_dashboard 0.1.0) AzureBillingDashboard.Accounts.User.changeset(#AzureBillingDashboard.Accounts.User<__meta__: #Ecto.Schema.Metadata<:built, "users">, confirmed_at: nil, email: nil, id: nil, inserted_at: nil, updated_at: nil, ...>, %{email: "musasrd@hotmail.com", password: "afd"})
+       test/azure_billing_dashboard/accounts/user_test.exs:16: (test)
+
+.
+
+Finished in 5.1 seconds (0.2s async, 4.9s sync)
+21 tests, 8 failures
+
+Randomized with seed 759261
