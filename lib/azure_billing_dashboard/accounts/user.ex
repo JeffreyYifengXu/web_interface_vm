@@ -33,6 +33,8 @@ defmodule AzureBillingDashboard.Accounts.User do
     |> cast(attrs, [:email, :password])
     |> validate_email()
     |> validate_password(opts)
+
+
   end
 
   defp validate_email(changeset) do
