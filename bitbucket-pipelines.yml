@@ -3,7 +3,7 @@
 # -----
 # You can specify a custom docker image from Docker Hub as your build environment.
 
-image: https://hub.docker.com/_/debian?tab=tags&page=1&name=bullseye-20210902-slim
+image: atlassian/default-image:3
 
 pipelines:
   
@@ -18,9 +18,9 @@ pipelines:
             - curl -L https://fly.io/install.sh | sh
             - export FLYCTL_INSTALL="/root/.fly"
             - export PATH="$FLYCTL_INSTALL/bin:$PATH"
-            - wget https://packages.erlang-solutions.com/erlang-solutions_2.0_all.deb && dpkg -i erlang-solutions_2.0_all.deb
-            - apt-get update
-            - apt-get install esl-erlang
-            - apt-get install elixir
-            - mix setup
+            #- wget https://packages.erlang-solutions.com/erlang-solutions_2.0_all.deb && dpkg -i erlang-solutions_2.0_all.deb
+            #- apt-get update
+            #- apt-get install esl-erlang
+            #- apt-get install elixir
+            #- mix setup
             - flyctl deploy --remote-only
