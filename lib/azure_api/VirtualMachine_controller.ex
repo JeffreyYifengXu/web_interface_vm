@@ -135,9 +135,6 @@ defmodule AzureAPI.VirtualMachineController do
         end
     end
 
-
-    end
-
 	# GET AZURE AVAILABILITIES
 
 	def get_availability(token) do
