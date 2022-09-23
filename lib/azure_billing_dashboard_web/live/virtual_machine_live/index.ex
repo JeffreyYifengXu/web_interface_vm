@@ -3,10 +3,20 @@ defmodule AzureBillingDashboardWeb.VirtualMachineLive.Index do
 
   alias AzureBillingDashboard.List_VMs
   alias AzureBillingDashboard.List_VMs.VirtualMachine
-  alias AzureBillingDashboard.Repo
+  # alias AzureBillingDashboard.Repo
+  alias AzureAPI.VirtualMachineController
+
+  defmodule Start do
+    defstruct id: "start", value: nil
+  end
+
+  defmodule Stop do
+    defstruct id: "stop", value: nil
+  end
 
   @impl true
   def mount(_params, _session, socket) do
+    VirtualMachineController.start_link(socket)
     {:ok, assign(socket, :virtualmachines, list_virtualmachines())}
   end
 
@@ -14,6 +24,34 @@ defmodule AzureBillingDashboardWeb.VirtualMachineLive.Index do
   def handle_params(params, _url, socket) do
     {:noreply, apply_action(socket, socket.assigns.live_action, params)}
   end
+
+  # def handle_params(%{start: name}, _url, socket) do
+  #   IO.inspect("starting VM #{name}")
+  #   VirtualMachineController.start_virtual_machine(name)
+
+  #   redirect(socket, to: "/virtualmachines/")
+
+  #   socket
+  #   |> assign(:page_title, "Start Virtual Machine")
+  #   |> assign(:virtual_machine, nil)
+  #   |> assign(:virtualmachines, list_virtualmachines())
+
+  #   {:noreply, socket}
+  # end
+
+  # def handle_params(%{stop: name}, _url, socket) do
+  #   IO.inspect("stopping VM #{name}")
+  #   VirtualMachineController.stop_virtual_machine(name)
+
+  #   redirect(socket, to: "/virtualmachines/")
+
+  #   socket
+  #   |> assign(:page_title, "Stop Virtual Machine")
+  #   |> assign(:virtual_machine, nil)
+  #   |> assign(:virtualmachines, list_virtualmachines())
+
+  #   {:noreply, socket}
+  # end
 
   defp apply_action(socket, :edit, %{"id" => id}) do
     socket
@@ -28,9 +66,47 @@ defmodule AzureBillingDashboardWeb.VirtualMachineLive.Index do
   end
 
   defp apply_action(socket, :index, _params) do
+
+    # IO.inspect(params)
+    # if params != %{} do
+    #   virtual_machine_name = params["name"]
+    #   if params["id"] == "start" do
+    #     VirtualMachineController.start_virtual_machine(virtual_machine_name)
+    #   else
+    #     VirtualMachineController.stop_virtual_machine(virtual_machine_name)
+    #   end
+    # end
+
     socket
     |> assign(:page_title, "Listing Virtual machines")
     |> assign(:virtual_machine, nil)
+    |> assign(:virtualmachines, list_virtualmachines())
+  end
+
+  defp apply_action(socket, :start, %{"name" => name}) do
+
+    IO.inspect("starting VM #{name}")
+    VirtualMachineController.start_virtual_machine(name)
+
+    push_redirect(socket, to: "/virtualmachines/")
+
+    socket
+    |> assign(:page_title, "Start Virtual Machine")
+    |> assign(:virtual_machine, nil)
+    |> assign(:virtualmachines, list_virtualmachines())
+  end
+
+  defp apply_action(socket, :stop, %{"name" => name}) do
+
+    IO.inspect("stopping VM #{name}")
+    VirtualMachineController.stop_virtual_machine(name)
+
+    push_redirect(socket, to: "/virtualmachines/")
+
+    socket
+    |> assign(:page_title, "Listing Virtual machines")
+    |> assign(:virtual_machine, nil)
+    |> assign(:virtualmachines, list_virtualmachines())
   end
 
   @doc """
@@ -49,7 +125,7 @@ defmodule AzureBillingDashboardWeb.VirtualMachineLive.Index do
   """
   def handle_event("start", %{"id" => id}, socket) do
     virtual_machine = List_VMs.get_virtual_machine!(id)
-    List_VMs.start_virtual_machine(virtual_machine)
+    VirtualMachineController.start_virtual_machine(virtual_machine.name)
 
     # {:noreply, assign(socket, :virtual_machine.process, 100)}
 
@@ -61,7 +137,7 @@ defmodule AzureBillingDashboardWeb.VirtualMachineLive.Index do
   """
   def handle_event("stop", %{"id" => id}, socket) do
     virtual_machine = List_VMs.get_virtual_machine!(id)
-    List_VMs.stop_virtual_machine(virtual_machine)
+    VirtualMachineController.stop_virtual_machine(virtual_machine.name)
 
     # {:noreply, assign(socket, :virtual_machine.process, 100)}
 

@@ -1,17 +1,17 @@
 defmodule AzureAPI.VirtualMachineController do
 
-    # alias AzureBillingDashboard.List_VMs
+    alias AzureAPI.AzureCalls
 
     use GenServer
 
     ########### GENSERVER ####################################################
     ########## GENSERVER CLIENT ###############
-    def start_link do
-        GenServer.start_link(__MODULE__, [], name: :virtual_machine_controller)
+    def start_link(socket) do
+        GenServer.start_link(__MODULE__, socket, name: :virtual_machine_controller)
     end
 
     def get_virtual_machines() do
-      GenServer.call(:virtual_machine_controller, {:get_virtual_machines})
+      GenServer.call(:virtual_machine_controller, :get_virtual_machines)
     end
 
 	def get_availability() do
@@ -33,19 +33,19 @@ defmodule AzureAPI.VirtualMachineController do
     ########## GENSERVER SERVER CALLBACKS ########################
 
     # Callbacks
-    def handle_call({:get_virtual_machines}, _from, data) do
+    def handle_call(:get_virtual_machines, _from, data) do
 
         # Call list_VM endpoint
-        {status, map} = list_azure_machines_and_statuses(data)
+        {status, map} = AzureCalls.list_azure_machines_and_statuses(data)
 
         if status == :ok do
             {:reply, map, data}
         else
             # pass new token
-            token = get_token()
+            token = AzureCalls.get_token()
 
             # Run list again
-            {_status, map} = list_azure_machines_and_statuses(token)
+            {_status, map} = AzureCalls.list_azure_machines_and_statuses(token)
 
             {:reply, map, token}
         end
@@ -55,7 +55,7 @@ defmodule AzureAPI.VirtualMachineController do
 
 	def handle_call({:get_availability}, _from, token) do
 		# Call availability function
-		data = get_availability(token)
+		data = AzureCalls.get_availability(token)
 
 		{:reply, data, token}
 	end
@@ -63,7 +63,7 @@ defmodule AzureAPI.VirtualMachineController do
     def handle_call({:start_virtual_machine, name}, _from, token) do
 
         # Call start endpoint
-        start_azure_machine(name, token)
+        AzureCalls.start_azure_machine(name, token)
 
         {:reply, token, token}
         # IO.inspect(body)
@@ -72,7 +72,7 @@ defmodule AzureAPI.VirtualMachineController do
     def handle_call({:stop_virtual_machine, name}, _from, token) do
 
         # Call Start Function
-        stop_azure_machine(name, token)
+        AzureCalls.stop_azure_machine(name, token)
 
         {:reply, token, token}
     end
@@ -80,159 +80,179 @@ defmodule AzureAPI.VirtualMachineController do
     def handle_call({:get_cost_data, name}, _from, token) do
 
         # Call Start Function
-        data = get_azure_cost_data(name, token)
+        data = AzureCalls.get_azure_cost_data(name, token)
 
         {:reply, data, token}
     end
 
-    def init(_) do
-        token = get_token()
+    # Refresh Token
+    def handle_info(:refresh_token, _state) do
+      token = AzureCalls.get_token()
+      {:noreply, token}
+    end
+
+    def handle_info({:refresh_sync, socket}, token) do
+        IO.inspect("refreshing sync")
+    #   Process.send_after(:virtual_machine_controller, :refresh_sync, 1000)
+
+      {:ok, _map} = AzureCalls.list_azure_machines_and_statuses(token)
+
+      {:noreply, token}
+    end
+
+    def init(socket) do
+        token = AzureCalls.get_token()
+        {:ok, _map} = AzureCalls.list_azure_machines_and_statuses(token)
         {:ok, token}
     end
 
     ################ END GENSERVER #######################
 
-    ################ API FUNCTIONS #######################
+#     ################ API FUNCTIONS #######################
 
-    def get_token() do
-        # Call Token Endpoint
-        HTTPoison.start
-        response = HTTPoison.post! "https://login.microsoftonline.com/a6a9eda9-1fed-417d-bebb-fb86af8465d2/oauth2/token", "grant_type=client_credentials&client_id=4bcba93a-6e11-417f-b4dc-224b008a7385&client_secret=oNH8Q~Gw6j0DKSEkJYlz2Cy65AkTxiPsoSLWKbiZ&resource=https%3A%2F%2Fmanagement.azure.com%2F", [{"Content-Type", "application/x-www-form-urlencoded"}]
-        {_status, body} = Poison.decode(response.body)
-        IO.inspect(body["error"])
-        token = body["access_token"]
-        IO.inspect(token)
+#     def get_token() do
+#         # Call Token Endpoint
+#         HTTPoison.start
+#         response = HTTPoison.post! "https://login.microsoftonline.com/a6a9eda9-1fed-417d-bebb-fb86af8465d2/oauth2/token", "grant_type=client_credentials&client_id=4bcba93a-6e11-417f-b4dc-224b008a7385&client_secret=oNH8Q~Gw6j0DKSEkJYlz2Cy65AkTxiPsoSLWKbiZ&resource=https%3A%2F%2Fmanagement.azure.com%2F", [{"Content-Type", "application/x-www-form-urlencoded"}]
+#         {_status, body} = Poison.decode(response.body)
+#         IO.inspect(body["error"])
+#         token = body["access_token"]
+#         IO.inspect(token)
 
-        token
-    end
+#         # Schedule a new token after 1 hour
+#         Process.send_after(:virtual_machine_controller, :refresh_token, 1 * 60 * 60 * 1000)
 
-    # LIST AZURE MACHINES
-    def list_azure_machines_and_statuses(token) do
-        # Construct Header
-        header = ['Authorization': "Bearer " <> token]
+#         token
+#     end
 
-        # Call List Endpoint
-        response = HTTPoison.get! "https://management.azure.com/subscriptions/f2b523ec-c203-404c-8b3c-217fa4ce341e/resourceGroups/usyd-12a/providers/Microsoft.Compute/virtualMachines?api-version=2022-03-01", header, []
-        IO.inspect(response.status_code)
-        if response.status_code == 200 do
-            body = Poison.Parser.parse!(response.body)
+#     # LIST AZURE MACHINES
+#     def list_azure_machines_and_statuses(token) do
+#         # Construct Header
+#         header = ['Authorization': "Bearer " <> token]
 
-            # Extract names
-            names = Enum.map(body["value"], fn (x) -> x["name"] end)
+#         # Call List Endpoint
+#         response = HTTPoison.get! "https://management.azure.com/subscriptions/f2b523ec-c203-404c-8b3c-217fa4ce341e/resourceGroups/usyd-12a/providers/Microsoft.Compute/virtualMachines?api-version=2022-03-01", header, []
+#         IO.inspect(response.status_code)
+#         if response.status_code == 200 do
+#             body = Poison.Parser.parse!(response.body)
 
-            IO.inspect(names)
+#             # Extract names
+#             names = Enum.map(body["value"], fn (x) -> x["name"] end)
 
-            map = Enum.map(names, fn name ->
-                instance_view = HTTPoison.get! "https://management.azure.com/subscriptions/f2b523ec-c203-404c-8b3c-217fa4ce341e/resourceGroups/usyd-12a/providers/Microsoft.Compute/virtualMachines/#{name}/instanceView?api-version=2022-03-01", header, []
-                {_status, body} = Poison.decode(instance_view.body)
-                [_provision, power] = Enum.map(body["statuses"], fn (x) -> x["displayStatus"] end)
-                {name, power}
-            end)
+#             IO.inspect(names)
 
-            {:ok, map}
-        else
-           {:error, response.status_code}
-        end
-    end
+#             map = Enum.map(names, fn name ->
+#                 instance_view = HTTPoison.get! "https://management.azure.com/subscriptions/f2b523ec-c203-404c-8b3c-217fa4ce341e/resourceGroups/usyd-12a/providers/Microsoft.Compute/virtualMachines/#{name}/instanceView?api-version=2022-03-01", header, []
+#                 {_status, body} = Poison.decode(instance_view.body)
+#                 [_provision, power] = Enum.map(body["statuses"], fn (x) -> x["displayStatus"] end)
+#                 {name, power}
+#             end)
+
+#             {:ok, map}
+#         else
+#            {:error, response.status_code}
+#         end
+#     end
 
 
-    end
+# 	# GET AZURE AVAILABILITIES
 
-	# GET AZURE AVAILABILITIES
+# 	def get_availability(token) do
+# 		# Construct header
+# 		header = ['Authorization': "Bearer " <> token]
 
-	def get_availability(token) do
-		# Construct header
-		header = ['Authorization': "Bearer " <> token]
 
-		response = HTTPoison.get! "https://management.azure.com/subscriptions/f2b523ec-c203-404c-8b3c-217fa4ce341e/providers/Microsoft.ResourceHealth/availabilityStatuses/current?api-version=2022-03-01", header, []
+#         response = HTTPoison.get! "https://management.azure.com/subscriptions/f2b523ec-c203-404c-8b3c-217fa4ce341e/providers/Microsoft.ResourceHealth/availabilityStatuses/current?api-version=2018-07-01", header, []
 
-		IO.inspect(response.status_code)
-		if response.status_code == 200 do
-			body = Poison.Parser.parse!(response.body)
+# 		# response = HTTPoison.get! "https://management.azure.com/subscriptions/f2b523ec-c203-404c-8b3c-217fa4ce341e/resourceGroups/usyd-12a/providers/Microsoft.ResourceHealth/availabilityStatuses?api-version=2018-07-01&", header, []
 
-			statuses = Enum.map(body["value"], fn (x) -> {x["properties"]["availabilityState"], x["properties"]["summary"]} end)
-			IO.inspect(statuses)
 
-			{:ok, statuses}
-		else
-			{:error, response.status_code}
-		end
-	end
+#         IO.inspect(response)
+# 		if response.status_code == 200 do
+# 			body = Poison.Parser.parse!(response.body)
 
-    # START AZURE MACHINES
+# 			statuses = Enum.map(body["value"], fn (x) -> {x["properties"]["availabilityState"], x["properties"]["summary"]} end)
+# 			IO.inspect(statuses)
 
-    def start_azure_machine(name, token) do
+# 			{:ok, statuses}
+# 		else
+# 			{:error, response.status_code}
+# 		end
+# 	end
 
-        # Construct Header
-        header = ['Authorization': "Bearer " <> token]
+#     # START AZURE MACHINES
 
-        # Call Start Endpoint
-        HTTPoison.post! "https://management.azure.com/subscriptions/f2b523ec-c203-404c-8b3c-217fa4ce341e/resourceGroups/usyd-12a/providers/Microsoft.Compute/virtualMachines/#{name}/start?api-version=2022-08-01", [], header
-    end
+#     def start_azure_machine(name, token) do
 
-    # STOP AZURE MACHINES
+#         # Construct Header
+#         header = ['Authorization': "Bearer " <> token]
 
-    def stop_azure_machine(name, token) do
+#         # Call Start Endpoint
+#         HTTPoison.post! "https://management.azure.com/subscriptions/f2b523ec-c203-404c-8b3c-217fa4ce341e/resourceGroups/usyd-12a/providers/Microsoft.Compute/virtualMachines/#{name}/start?api-version=2022-08-01", [], header
+#     end
 
-        # Construct Header
-        header = ['Authorization': "Bearer " <> token]
+#     # STOP AZURE MACHINES
 
-        # Call Start Endpoint
-        HTTPoison.post! "https://management.azure.com/subscriptions/f2b523ec-c203-404c-8b3c-217fa4ce341e/resourceGroups/usyd-12a/providers/Microsoft.Compute/virtualMachines/#{name}/powerOff?api-version=2022-08-01", [], header
-    end
+#     def stop_azure_machine(name, token) do
 
-    # GET COST DATA
-    """
-    TO CALL THIS FUNCTION, CALL THE GENSERVER FUNCTION
+#         # Construct Header
+#         header = ['Authorization': "Bearer " <> token]
 
-    For example, needed in the details page
+#         # Call Start Endpoint
+#         HTTPoison.post! "https://management.azure.com/subscriptions/f2b523ec-c203-404c-8b3c-217fa4ce341e/resourceGroups/usyd-12a/providers/Microsoft.Compute/virtualMachines/#{name}/powerOff?api-version=2022-08-01", [], header
+#     end
 
-    eg -> response = AzureAPI.VirtualMachineController.get_cost_data(vmName).
-    get_cost_data/1 grabs the token from the genserver and sends it to this function along with the vmName
-    """
+#     # GET COST DATA
+#     """
+#     TO CALL THIS FUNCTION, CALL THE GENSERVER FUNCTION
 
-    def get_azure_cost_data(name, token) do
+#     For example, needed in the details page
 
-        # Construct Header
-        header = ['Authorization': "Bearer " <> token, 'content-type': "application/json"]
+#     eg -> response = AzureAPI.VirtualMachineController.get_cost_data(vmName).
+#     get_cost_data/1 grabs the token from the genserver and sends it to this function along with the vmName
+#     """
 
-        scope = "subscriptions/f2b523ec-c203-404c-8b3c-217fa4ce341e/resourceGroups/usyd-12a"
+#     def get_azure_cost_data(name, token) do
 
-        body = %{
-            :type => "Usage",
-            :timeframe => "MonthToDate",
-            :dataset => %{
-                :granularity => "Daily",
-                :filter => %{
-                    :dimensions => %{
-                        :name => "ResourceId",
-                        :operator => "In",
-                        :values => [
-                            "/subscriptions/f2b523ec-c203-404c-8b3c-217fa4ce341e/resourcegroups/usyd-12a/providers/microsoft.compute/virtualmachines/#{name}"
-                        ]
-                    }
-                },
-                :grouping => [
-                    %{
-                        :type => "Dimension",
-                        :name => "ResourceId"
-                    }
-                ],
-                :aggregation => %{
-                    :totalCost => %{
-                        :name => "PreTaxCost",
-                        :function => "sum"
-                    }
-                }
-            }
-        }
+#         # Construct Header
+#         header = ['Authorization': "Bearer " <> token, 'content-type': "application/json"]
 
-        # Call Start Endpoint
-        response = HTTPoison.post! "https://management.azure.com/#{scope}/providers/Microsoft.CostManagement/query?api-version=2021-10-01", Poison.encode!(body), header
+#         scope = "subscriptions/f2b523ec-c203-404c-8b3c-217fa4ce341e/resourceGroups/usyd-12a"
 
-        # Return decoded body
-        Poison.decode! response.body
-        # "https://management.azure.com/#{scope}/providers/Microsoft.CostManagement/query?api-version=2021-10-01"
+#         body = %{
+#             :type => "Usage",
+#             :timeframe => "MonthToDate",
+#             :dataset => %{
+#                 :granularity => "Daily",
+#                 :filter => %{
+#                     :dimensions => %{
+#                         :name => "ResourceId",
+#                         :operator => "In",
+#                         :values => [
+#                             "/subscriptions/f2b523ec-c203-404c-8b3c-217fa4ce341e/resourcegroups/usyd-12a/providers/microsoft.compute/virtualmachines/#{name}"
+#                         ]
+#                     }
+#                 },
+#                 :grouping => [
+#                     %{
+#                         :type => "Dimension",
+#                         :name => "ResourceId"
+#                     }
+#                 ],
+#                 :aggregation => %{
+#                     :totalCost => %{
+#                         :name => "PreTaxCost",
+#                         :function => "sum"
+#                     }
+#                 }
+#             }
+#         }
 
-    end
+#         # Call Start Endpoint
+#         response = HTTPoison.post! "https://management.azure.com/#{scope}/providers/Microsoft.CostManagement/query?api-version=2021-10-01", Poison.encode!(body), header
+
+#         # Return decoded body
+#         Poison.decode! response.body
+#         # "https://management.azure.com/#{scope}/providers/Microsoft.CostManagement/query?api-version=2021-10-01"
+#     end
 end
