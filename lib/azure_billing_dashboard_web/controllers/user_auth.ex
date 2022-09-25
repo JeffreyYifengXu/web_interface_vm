@@ -28,7 +28,9 @@ defmodule AzureBillingDashboardWeb.UserAuth do
   def log_in_user(conn, user, params \\ %{}) do
     token = Accounts.generate_user_session_token(user)
     user_return_to = get_session(conn, :user_return_to)
-    VirtualMachineController.start_link()
+    IO.inspect("Starting Link")
+    # VirtualMachineController.start_link()
+    IO.inspect("Started Link")
 
     conn
     |> renew_session()
@@ -149,5 +151,5 @@ defmodule AzureBillingDashboardWeb.UserAuth do
 
   defp maybe_store_return_to(conn), do: conn
 
-  defp signed_in_path(_conn), do: ""
+  defp signed_in_path(_conn), do: "/virtualmachines"
 end

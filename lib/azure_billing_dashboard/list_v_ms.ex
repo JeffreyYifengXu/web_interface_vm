@@ -27,21 +27,21 @@ defmodule AzureBillingDashboard.List_VMs do
   """
   def list_virtualmachines do
 
-    names_amd_statuses = VirtualMachineController.get_virtual_machines()
+    VirtualMachineController.get_virtual_machines()
 
-    # Cross check database
-    for item <- names_amd_statuses do
-      {name, power} = item
+    # # Cross check database
+    # for item <- names_and_statuses do
+    #   {name, power} = item
 
-      if Repo.exists?(from vm in VirtualMachine, where: vm.name == ^name) do
-        # Get Machine
-        virtual_machine = Repo.get_by(VirtualMachine, [name: name])
-        |> update_virtual_machine(%{status: power})
-      else
-        # Create Virtual Machine
-        create_virtual_machine(%{name: name, status: power})
-      end
-    end
+    #   if Repo.exists?(from vm in VirtualMachine, where: vm.name == ^name) do
+    #     # Get Machine
+    #     virtual_machine = Repo.get_by(VirtualMachine, [name: name])
+    #     |> update_virtual_machine(%{status: power})
+    #   else
+    #     # Create Virtual Machine
+    #     create_virtual_machine(%{name: name, status: power})
+    #   end
+    # end
 
     Repo.all(from p in VirtualMachine, order_by: [desc: p.status])
   end
