@@ -27,7 +27,7 @@ defmodule AzureBillingDashboard.List_VMs do
   """
   def list_virtualmachines do
 
-    VirtualMachineController.get_virtual_machines()
+    # VirtualMachineController.get_virtual_machines()
 
     # # Cross check database
     # for item <- names_and_statuses do
