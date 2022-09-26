@@ -86,7 +86,8 @@ defmodule AzureBillingDashboardWeb.Router do
     live "/virtualmachines", VirtualMachineLive.Index, :index
     live "/virtualmachines/new", VirtualMachineLive.Index, :new
     live "/virtualmachines/:id/edit", VirtualMachineLive.Index, :edit
-    live "/virtualmachines/:id/start", VirtualMachineLive.Index, :start
+    live "/virtualmachines/:name/start", VirtualMachineLive.Index, :start
+    live "/virtualmachines/:name/stop", VirtualMachineLive.Index, :stop
 
     live "/virtualmachines/:id", VirtualMachineLive.Show, :show
     live "/virtualmachines/:id/show/edit", VirtualMachineLive.Show, :edit
