@@ -5,6 +5,7 @@ defmodule AzureBillingDashboardWeb.VirtualMachineLive.Index do
   alias AzureBillingDashboard.List_VMs.VirtualMachine
   # alias AzureBillingDashboard.Repo
   alias AzureAPI.VirtualMachineController
+  # import AzureBillingDashboardWeb.VirtualMachineLive.VirtualMachineLiveComponent, only: [handle_event: 3]
 
   defmodule Start do
     defstruct id: "start", value: nil
@@ -71,6 +72,46 @@ defmodule AzureBillingDashboardWeb.VirtualMachineLive.Index do
     |> assign(:virtualmachines, list_virtualmachines())
   end
 
+  @doc """
+    Handles event when "Delete" is clicked
+  """
+  @impl true
+  def handle_event("delete", %{"id" => id}, socket) do
+    virtual_machine = List_VMs.get_virtual_machine!(id)
+    {:ok, _} = List_VMs.delete_virtual_machine(virtual_machine)
+
+    # Process.send_after(self(), :update_live_view, socket, 5000)
+
+    {:noreply, assign(socket, :virtualmachines, List_VMs.list_virtualmachines())}
+  end
+
+  @doc """
+    Handles event when "Start" is clicked
+  """
+  def handle_event("start", %{"id" => id}, socket) do
+    virtual_machine = List_VMs.get_virtual_machine!(id)
+    VirtualMachineController.start_virtual_machine(virtual_machine.name)
+
+    # Process.send_after(self(), :update_live_view, socket, 5000)
+
+    # {:noreply, assign(socket, :virtual_machine.process, 100)}
+
+    {:noreply, assign(socket, :virtualmachines, List_VMs.list_virtualmachines())}
+  end
+
+  @doc """
+    Handles event when "Stop" is clicked
+  """
+  def handle_event("stop", %{"id" => id}, socket) do
+    virtual_machine = List_VMs.get_virtual_machine!(id)
+    VirtualMachineController.stop_virtual_machine(virtual_machine.name)
+
+    # {:noreply, assign(socket, :virtual_machine.process, 100)}
+
+    {:noreply, assign(socket, :virtualmachines, List_VMs.list_virtualmachines())}
+  end
+
+  @impl true
   @doc """
     Handles event when "Batch Start" is clicked
   """

@@ -33,7 +33,7 @@
   </thead>
   <tbody id="virtualmachines">
     <%= for virtual_machine <- @virtualmachines do %>
-      <%= live_component @socket, AzureBillingDashboardWeb.VirtualMachineLive.VirtualMachineLiveComponent, virtual_machine: virtual_machine %>
+      <%= live_component AzureBillingDashboardWeb.VirtualMachineLive.VirtualMachineLiveComponent, id: virtual_machine.id, virtual_machine: virtual_machine %>
     <% end %>
   </tbody>
 </table>

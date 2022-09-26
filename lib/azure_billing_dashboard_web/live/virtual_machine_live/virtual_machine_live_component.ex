@@ -6,8 +6,7 @@ defmodule AzureBillingDashboardWeb.VirtualMachineLive.VirtualMachineLiveComponen
 
   def render(assigns) do
     IO.puts("Rendering")
-    IO.inspect(assigns.post.__meta__.state)
-    ~L"""
+    ~H"""
     <tr id={"virtual_machine-#{@virtual_machine.id}"}>
 
 
@@ -43,43 +42,4 @@ defmodule AzureBillingDashboardWeb.VirtualMachineLive.VirtualMachineLiveComponen
     </tr>
     """
   end
-
-  @doc """
-    Handles event when "Start" is clicked
-  """
-  def handle_event("start", %{"id" => id}, socket) do
-    virtual_machine = List_VMs.get_virtual_machine!(id)
-    VirtualMachineController.start_virtual_machine(virtual_machine.name)
-
-    # Process.send_after(self(), :update_live_view, socket, 1000)
-
-    # {:noreply, assign(socket, :@virtual_machine.process, 100)}
-
-    {:noreply, assign(socket, :virtualmachines, List_VMs.list_virtualmachines())}
-  end
-
-  @doc """
-    Handles event when "Stop" is clicked
-  """
-  def handle_event("stop", %{"id" => id}, socket) do
-    virtual_machine = List_VMs.get_virtual_machine!(id)
-    VirtualMachineController.stop_virtual_machine(virtual_machine.name)
-
-    # {:noreply, assign(socket, :@virtual_machine.process, 100)}
-
-    {:noreply, assign(socket, :virtualmachines, List_VMs.list_virtualmachines())}
-  end
-
-    @doc """
-      Handles event when "Delete" is clicked
-    """
-    @impl true
-    def handle_event("delete", %{"id" => id}, socket) do
-      virtual_machine = List_VMs.get_virtual_machine!(id)
-      {:ok, _} = List_VMs.delete_virtual_machine(virtual_machine)
-
-      # Process.send_after(self(), :update_live_view, socket, 1000)
-
-      {:noreply, assign(socket, :virtualmachines, List_VMs.list_virtualmachines())}
-    end
 end

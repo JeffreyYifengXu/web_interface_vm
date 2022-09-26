@@ -3,7 +3,7 @@ defmodule AzureBillingDashboardWeb.PageController do
   alias Phoenix.LiveView
 
   def index(conn, _params) do
-    render(conn, "index.html")
-    # LiveView.Controller.live_render(conn, AzureBillingDashboardWeb.VirtualMachineLive.Index, session: %{})
+    # render(conn, "index.html")
+    LiveView.Controller.live_render(conn, AzureBillingDashboardWeb.VirtualMachineLive.Index, session: %{})
   end
 end
