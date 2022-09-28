@@ -11,17 +11,18 @@
   </.modal>
 <% end %>
 
-<div style="display:grid; grid-template-columns:1fr 1fr 1fr">
+<div style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr">
+  <%= link "Refresh", to: "#", phx_click: "refresh", class: "button-1", type: "custom" %>
   <%= live_patch "New Virtual machine", to: Routes.virtual_machine_index_path(@socket, :new), class: "button-1", type: "custom" %>
   <%= link "Batch Start", to: "#", phx_click: "batch-start", class: "button-1", type: "custom" %>
   <%= link "Batch Stop", to: "#", phx_click: "batch-stop", class: "button-1", type: "custom" %>
 </div>
 
-<hr style="width:120%">
+<hr style="width:100%">
 
 <h1>Current VM's</h1>
 
-<table style="width:120%; text-align: center;">
+<table style="width:100%; text-align: center;">
   <thead>
     <tr>
       <th>Name</th>
