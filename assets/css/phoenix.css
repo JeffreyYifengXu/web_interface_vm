@@ -16,6 +16,15 @@ a[type='custom']:focus,a[type='custom']:hover{
     color:#0080AF
 }
 
+/* custom status text */
+.status-start {
+    color: #00FF00;
+}
+.status-stop {
+    color: #FF0000;
+}
+
+
 /* custom black header buttons */
 .button-1 {
     background-color:#282828;
