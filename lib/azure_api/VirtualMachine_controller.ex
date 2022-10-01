@@ -86,14 +86,14 @@ defmodule AzureAPI.VirtualMachineController do
     end
 
     # Refresh Token
-    def handle_info(:refresh_token, _state) do
+    def handle_info(:refresh_token, state) do
       token = AzureCalls.get_token()
       {:noreply, token}
     end
 
-    def handle_info({:refresh_sync, socket}, token) do
+    def handle_info(:refresh_sync, token) do
         IO.inspect("refreshing sync")
-    #   Process.send_after(:virtual_machine_controller, :refresh_sync, 1000)
+
 
       {:ok, _map} = AzureCalls.list_azure_machines_and_statuses(token)
 
