@@ -127,7 +127,7 @@
     letter-spacing:.1rem;
     line-height:3.8rem;
     /* padding:0 3.0rem; */
-    width: 70px;
+    width: 50px;
     text-align:center;
     text-decoration:none;
     text-transform:uppercase;
@@ -145,7 +145,7 @@
     border-color:#606c76;
     color:#FF7F50;
     outline:0;
-    cursor: pointer;
+    cursor:pointer;
 }
 
 /* General style */

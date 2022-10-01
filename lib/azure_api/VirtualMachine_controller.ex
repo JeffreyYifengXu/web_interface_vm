@@ -50,7 +50,6 @@ defmodule AzureAPI.VirtualMachineController do
             {:reply, map, token}
         end
         # IO.inspect(body)
-
     end
 
 	def handle_call({:get_availability}, _from, token) do

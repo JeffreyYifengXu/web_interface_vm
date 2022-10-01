@@ -38,6 +38,12 @@ defmodule AzureBillingDashboardWeb.VirtualMachineLive.Show do
   defp page_title(:show), do: "Show Virtual machine"
   defp page_title(:edit), do: "Edit Virtual machine"
 
+  defp apply_action(socket, :edit, %{"id" => id}) do
+    socket
+    |> assign(:page_title, "Edit Virtual machine")
+    |> assign(:virtual_machine, List_VMs.get_virtual_machine!(id))
+  end
+
   @doc """
   Function used to send test data to our webpage.
   Currently being used by the ChartJS graphing library.
