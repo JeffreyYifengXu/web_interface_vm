@@ -34,6 +34,7 @@ defmodule AzureAPI.AzureCalls do
         IO.inspect(response.status_code)
         if response.status_code == 200 do
             body = Poison.Parser.parse!(response.body)
+            IO.inspect(body)
 
             # Extract names
             names = Enum.map(body["value"], fn (x) -> x["name"] end)
