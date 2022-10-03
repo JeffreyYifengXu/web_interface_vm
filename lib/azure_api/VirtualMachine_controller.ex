@@ -6,8 +6,8 @@ defmodule AzureAPI.VirtualMachineController do
 
     ########### GENSERVER ####################################################
     ########## GENSERVER CLIENT ###############
-    def start_link(socket) do
-        GenServer.start_link(__MODULE__, socket, name: :virtual_machine_controller)
+    def start_link() do
+        GenServer.start_link(__MODULE__, [], name: :virtual_machine_controller)
     end
 
     def get_virtual_machines() do
@@ -99,7 +99,7 @@ defmodule AzureAPI.VirtualMachineController do
       {:noreply, token}
     end
 
-    def init(socket) do
+    def init(_) do
         token = AzureCalls.get_token()
         {:ok, _map} = AzureCalls.list_azure_machines_and_statuses(token)
         {:ok, token}
