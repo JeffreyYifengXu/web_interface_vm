@@ -17,7 +17,7 @@ defmodule AzureBillingDashboardWeb.VirtualMachineLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
-    VirtualMachineController.start_link(socket)
+    VirtualMachineController.start_link()
     {:ok, assign(socket, :virtualmachines, list_virtualmachines())}
   end
 
