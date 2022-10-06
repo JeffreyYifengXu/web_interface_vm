@@ -5,6 +5,7 @@ defmodule AzureBillingDashboardWeb.VirtualMachineLive.Index do
   alias AzureBillingDashboard.List_VMs.VirtualMachine
   # alias AzureBillingDashboard.Repo
   alias AzureAPI.VirtualMachineController
+  alias AzureBillingDashboardWeb.UserAuth
   # import AzureBillingDashboardWeb.VirtualMachineLive.VirtualMachineLiveComponent, only: [handle_event: 3]
 
   defmodule Start do
@@ -16,13 +17,18 @@ defmodule AzureBillingDashboardWeb.VirtualMachineLive.Index do
   end
 
   @impl true
-  def mount(_params, _session, socket) do
-    VirtualMachineController.start_link()
+  def mount(_params, session, socket) do
+    IO.inspect(session)
+    # AzureBillingDashboard.GenServerSupervisor.start_link(Map.get(session, "user_id"))
+    AzureAPI.VirtualMachineController.start_link(Map.get(session, "user_id"))
+    IO.inspect(Map.get(session, "user_id"))
     {:ok, assign(socket, :virtualmachines, list_virtualmachines())}
   end
 
   @impl true
   def handle_params(params, _url, socket) do
+    IO.inspect("params")
+    IO.inspect(params)
     Process.send_after(self(), :update_live_view, 1000)
     {:noreply, apply_action(socket, socket.assigns.live_action, params)}
   end
