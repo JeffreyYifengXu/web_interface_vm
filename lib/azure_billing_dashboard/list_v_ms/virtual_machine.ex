@@ -9,6 +9,8 @@ defmodule AzureBillingDashboard.List_VMs.VirtualMachine do
     field :name, :string
     field :process, :string, default: "0.0"
     field :status, :string, default: "VM deallocated"
+    field :availability, :string, default: "Available"
+    field :max_price, :string, default: "2"
     # field :status_bool, :boolean
 
     timestamps()

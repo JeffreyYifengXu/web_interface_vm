@@ -5,8 +5,6 @@ defmodule AzureBillingDashboardWeb.VirtualMachineLive.Index do
   alias AzureBillingDashboard.List_VMs.VirtualMachine
   # alias AzureBillingDashboard.Repo
   alias AzureAPI.VirtualMachineController
-  alias AzureBillingDashboardWeb.UserAuth
-  # import AzureBillingDashboardWeb.VirtualMachineLive.VirtualMachineLiveComponent, only: [handle_event: 3]
 
   defmodule Start do
     defstruct id: "start", value: nil
@@ -17,27 +15,22 @@ defmodule AzureBillingDashboardWeb.VirtualMachineLive.Index do
   end
 
   @impl true
-  def mount(_params, session, socket) do
-    IO.inspect(session)
-    # AzureBillingDashboard.GenServerSupervisor.start_link(Map.get(session, "user_id"))
-    AzureAPI.VirtualMachineController.start_link(Map.get(session, "user_id"))
-    IO.inspect(Map.get(session, "user_id"))
+  def mount(_params, _session, socket) do
+    VirtualMachineController.start_link(socket)
     {:ok, assign(socket, :virtualmachines, list_virtualmachines())}
   end
 
   @impl true
   def handle_params(params, _url, socket) do
-    IO.inspect("params")
-    IO.inspect(params)
-    Process.send_after(self(), :update_live_view, 1000)
+    Process.send_after(self(), :update_live_view, 5000)
     {:noreply, apply_action(socket, socket.assigns.live_action, params)}
   end
 
-  # defp apply_action(socket, :edit, %{"id" => id}) do
-  #   socket
-  #   |> assign(:page_title, "Edit Virtual machine")
-  #   |> assign(:virtual_machine, List_VMs.get_virtual_machine!(id))
-  # end
+  defp apply_action(socket, :edit, %{"id" => id}) do
+    socket
+    |> assign(:page_title, "Edit Virtual machine")
+    |> assign(:virtual_machine, List_VMs.get_virtual_machine!(id))
+  end
 
   defp apply_action(socket, :new, _params) do
     socket
@@ -88,7 +81,7 @@ defmodule AzureBillingDashboardWeb.VirtualMachineLive.Index do
 
     # Process.send_after(self(), :update_live_view, socket, 5000)
 
-    {:noreply, assign(socket, :virtualmachines, List_VMs.list_virtualmachines())}
+    {:noreply, assign(socket, :virtualmachines, list_virtualmachines())}
   end
 
   @doc """
@@ -102,7 +95,7 @@ defmodule AzureBillingDashboardWeb.VirtualMachineLive.Index do
 
     # {:noreply, assign(socket, :virtual_machine.process, 100)}
 
-    {:noreply, assign(socket, :virtualmachines, List_VMs.list_virtualmachines())}
+    {:noreply, assign(socket, :virtualmachines, list_virtualmachines())}
   end
 
   @doc """
@@ -114,10 +107,9 @@ defmodule AzureBillingDashboardWeb.VirtualMachineLive.Index do
 
     # {:noreply, assign(socket, :virtual_machine.process, 100)}
 
-    {:noreply, assign(socket, :virtualmachines, List_VMs.list_virtualmachines())}
+    {:noreply, assign(socket, :virtualmachines, list_virtualmachines())}
   end
 
-  @impl true
   @doc """
     Handles event when "Batch Start" is clicked
   """
@@ -146,20 +138,12 @@ defmodule AzureBillingDashboardWeb.VirtualMachineLive.Index do
     {:noreply, assign(socket, :virtualmachines, list_virtualmachines())}
   end
 
+  defp list_virtualmachines do
+    List_VMs.list_virtualmachines()
+  end
+
   def handle_info(:update_live_view, socket) do
     Process.send_after(self(), :update_live_view, 1000)
     {:noreply, assign(socket, :virtualmachines, list_virtualmachines())}
   end
-
-  def handle_info(:display_availability, socket) do
-    IO.puts("hi")
-  end
-
-  def handle_event("refresh", socket) do
-      # virtual_machine = List_VMs.get_virtual_machine!(id)
-      # VirtualMachineController.stop_virtual_machine(virtual_machine.name)
-      #
-      # {:noreply, assign(socket, :virtualmachines, List_VMs.list_virtualmachines())}
-  end
-
 end
