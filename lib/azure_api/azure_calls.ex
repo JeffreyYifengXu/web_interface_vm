@@ -154,9 +154,9 @@ defmodule AzureAPI.AzureCalls do
                         :name => "ResourceId",
                         :operator => "In",
                         :values => [
-                            "/subscriptions/f2b523ec-c203-404c-8b3c-217fa4ce341e/resourcegroups/usyd-12a/providers/microsoft.compute/virtualmachines/#{vm.name}",
-                            "/subscriptions/f2b523ec-c203-404c-8b3c-217fa4ce341e/resourcegroups/usyd-12a/providers/microsoft.compute/disks/#{vm.odisk_name}",
-                            "/subscriptions/f2b523ec-c203-404c-8b3c-217fa4ce341e/resourcegroups/usyd-12a/providers/microsoft.network/publicipaddresses/#{vm.name}-ip"
+                            "/subscriptions/f2b523ec-c203-404c-8b3c-217fa4ce341e/resourcegroups/usyd-12a/providers/microsoft.compute/virtualmachines/#{name.name}",
+                            "/subscriptions/f2b523ec-c203-404c-8b3c-217fa4ce341e/resourcegroups/usyd-12a/providers/microsoft.compute/disks/#{name.odisk_name}",
+                            "/subscriptions/f2b523ec-c203-404c-8b3c-217fa4ce341e/resourcegroups/usyd-12a/providers/microsoft.network/publicipaddresses/#{name.name}-ip"
                         ]
                     }
                 },
