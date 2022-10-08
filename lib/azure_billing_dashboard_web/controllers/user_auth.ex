@@ -29,11 +29,13 @@ defmodule AzureBillingDashboardWeb.UserAuth do
     token = Accounts.generate_user_session_token(user)
     user_return_to = get_session(conn, :user_return_to)
     IO.inspect("Starting Link")
-    # VirtualMachineController.start_link()
+    # AzureBillingDashboard.GenServerSupervisor.start_link(user)
     IO.inspect("Started Link")
 
     conn
     |> renew_session()
+    |> put_session(:user, user_return_to)
+    |> put_session(:user_id, user)
     |> put_session(:user_token, token)
     |> put_session(:live_socket_id, "users_sessions:#{Base.url_encode64(token)}")
     |> maybe_write_remember_me_cookie(token, params)
