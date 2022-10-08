@@ -7,6 +7,13 @@ defmodule AzureBillingDashboard.Accounts.User do
     field :password, :string, virtual: true, redact: true
     field :hashed_password, :string, redact: true
     field :confirmed_at, :naive_datetime
+    field :sub_id, :string
+    field :tenant_id, :string
+    field :client_secret, :string
+    field :client_id, :string
+    field :secrete_id, :string
+    field :object_id, :string
+    field :resource_group, :string
     timestamps()
     # field :sub_id, :string
     # field :hashed_id, :string
@@ -30,7 +37,8 @@ defmodule AzureBillingDashboard.Accounts.User do
   """
   def registration_changeset(user, attrs, opts \\ []) do
     user
-    |> cast(attrs, [:email, :password])
+    |> cast(attrs, [:email, :password, :sub_id, :tenant_id, :client_secret, :client_id,
+      :secrete_id, :object_id, :resource_group])
     |> validate_email()
     |> validate_password(opts)
 
