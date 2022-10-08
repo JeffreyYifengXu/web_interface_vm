@@ -26,8 +26,18 @@ defmodule AzureAPI.VirtualMachineController do
         GenServer.call(:virtual_machine_controller, {:stop_virtual_machine, name})
     end
 
-    def get_cost_data(name) do
-        GenServer.call(:virtual_machine_controller, {:get_cost_data, name})
+    def get_cost_data(vm) do
+        try do
+            GenServer.call(:virtual_machine_controller, {:get_cost_data, vm}, 1000000)
+          catch
+            :exit, _ ->
+              IO.puts("there was an error")
+              start_link("TEST123")
+
+            e ->
+              IO.puts("Fail state because: #{e}")
+              get_cost_data(vm)
+          end
     end
 
     ########## GENSERVER SERVER CALLBACKS ########################
@@ -77,12 +87,12 @@ defmodule AzureAPI.VirtualMachineController do
         {:reply, token, token}
     end
 
-    def handle_call({:get_cost_data, name}, _from, token) do
+    def handle_call({:get_cost_data, vm}, _from, token) do
 
         # Call Start Function
-        data = AzureCalls.get_azure_cost_data(name, token)
+        data = AzureCalls.get_azure_cost_data(vm, token)
 
-        {:reply, data, token}
+        {:reply, data, token, 1000000}
     end
 
     # Refresh Token
