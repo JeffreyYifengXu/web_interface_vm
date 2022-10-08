@@ -1,0 +1,40 @@
+<%= if @live_action in [:new, :edit] do %>
+  <.modal return_to={Routes.virtual_machine_index_path(@socket, :index)}>
+    <.live_component
+      module={AzureBillingDashboardWeb.VirtualMachineLive.FormComponent}
+      id={@virtual_machine.id || :new}
+      title={@page_title}
+      action={@live_action}
+      virtual_machine={@virtual_machine}
+      return_to={Routes.virtual_machine_index_path(@socket, :index)}
+    />
+  </.modal>
+<% end %>
+
+<div style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr">
+  <%= link "Refresh", to: "#", phx_click: "#", class: "button-1", type: "custom" %>
+  <%= live_patch "New Virtual machine", to: Routes.virtual_machine_index_path(@socket, :new), class: "button-1", type: "custom" %>
+  <%= link "Batch Start", to: "#", phx_click: "batch-start", class: "button-1", type: "custom" %>
+  <%= link "Batch Stop", to: "#", phx_click: "batch-stop", class: "button-1", type: "custom" %>
+</div>
+
+<hr style="width:100%">
+
+<h1>Current VM's</h1>
+
+<table style="width:100%; text-align: center;">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Process</th>
+      <th>Status</th>
+      <th>Current Running Cost</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody id="virtualmachines">
+    <%= for virtual_machine <- @virtualmachines do %>
+      <%= live_component AzureBillingDashboardWeb.VirtualMachineLive.VirtualMachineLiveComponent, id: virtual_machine.id, virtual_machine: virtual_machine %>
+    <% end %>
+  </tbody>
+</table>

@@ -8,6 +8,13 @@ defmodule AzureBillingDashboard.Migrations.CreateUsersAuthTables do
       add :email, :citext, null: false
       add :hashed_password, :string, null: false
       add :confirmed_at, :naive_datetime
+      add :sub_id, :string, null: false
+      add :tenant_id, :string, null: false
+      add :client_secret, :string, null: false
+      add :client_id, :string, null: false
+      add :secrete_id, :string, null: false
+      add :object_id, :string, null: false
+      add :resource_group, :string, null: false
       timestamps()
     end
 

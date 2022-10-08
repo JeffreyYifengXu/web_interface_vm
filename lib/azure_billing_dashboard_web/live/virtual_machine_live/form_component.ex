@@ -1,6 +1,5 @@
 defmodule AzureBillingDashboardWeb.VirtualMachineLive.FormComponent do
   use AzureBillingDashboardWeb, :live_component
-
   alias AzureBillingDashboard.List_VMs
 
   @impl true

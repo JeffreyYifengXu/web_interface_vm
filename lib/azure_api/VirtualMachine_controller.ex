@@ -6,8 +6,9 @@ defmodule AzureAPI.VirtualMachineController do
 
     ########### GENSERVER ####################################################
     ########## GENSERVER CLIENT ###############
-    def start_link(socket) do
-        GenServer.start_link(__MODULE__, socket, name: :virtual_machine_controller)
+    def start_link(user) do
+        #IO.inspect(user.sub_id)
+        GenServer.start_link(__MODULE__, user, name: :virtual_machine_controller)
     end
 
     def get_virtual_machines() do
@@ -33,24 +34,13 @@ defmodule AzureAPI.VirtualMachineController do
     ########## GENSERVER SERVER CALLBACKS ########################
 
     # Callbacks
-    def handle_call(:get_virtual_machines, _from, data) do
+    def handle_call(:get_virtual_machines, _from, azure_keys) do
 
         # Call list_VM endpoint
-        {status, map} = AzureCalls.list_azure_machines_and_statuses(data)
+        {status, map} = AzureCalls.list_azure_machines_and_statuses(azure_keys)
 
-        if status == :ok do
-            {:reply, map, data}
-        else
-            # pass new token
-            token = AzureCalls.get_token()
-
-            # Run list again
-            {_status, map} = AzureCalls.list_azure_machines_and_statuses(token)
-
-            {:reply, map, token}
-        end
+        {:reply, map, azure_keys}
         # IO.inspect(body)
-
     end
 
 	def handle_call({:get_availability}, _from, token) do
@@ -86,9 +76,9 @@ defmodule AzureAPI.VirtualMachineController do
     end
 
     # Refresh Token
-    def handle_info(:refresh_token, state) do
-      token = AzureCalls.get_token()
-      {:noreply, token}
+    def handle_info(:refresh_token, azure_keys) do
+      token = AzureCalls.get_token(azure_keys)
+      {:noreply, azure_keys}
     end
 
     def handle_info(:refresh_sync, token) do
@@ -100,10 +90,19 @@ defmodule AzureAPI.VirtualMachineController do
       {:noreply, token}
     end
 
-    def init(socket) do
-        token = AzureCalls.get_token()
-        {:ok, _map} = AzureCalls.list_azure_machines_and_statuses(token)
-        {:ok, token}
+    def init(user) do
+        token_keys = %{"sub_id" => user.sub_id, "tenant_id" => user.tenant_id,
+          "client_secret" => user.client_secret, "client_id" => user.client_id,
+          "resource_group" => user.resource_group}
+        token = AzureCalls.get_token(token_keys)
+        # azure_keys = Map.put(token_keys ,:token, token)
+        azure_keys = %{"sub_id" => user.sub_id, "tenant_id" => user.tenant_id,
+          "client_secret" => user.client_secret, "client_id" => user.client_id,
+          "resource_group" => user.resource_group, "token" => token}
+        IO.inspect(Map.get(azure_keys, "token"))
+        {:ok, _map} = AzureCalls.list_azure_machines_and_statuses(azure_keys)
+        {:ok, azure_keys}
+
     end
 
     ################ END GENSERVER #######################
