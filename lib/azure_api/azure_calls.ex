@@ -62,7 +62,7 @@ defmodule AzureAPI.AzureCalls do
                 end
             end
 
-            Process.send_after(:virtual_machine_controller, :refresh_sync, 1000)
+            # Process.send_after(:virtual_machine_controller, :refresh_sync, 1000)
 
             # assign(socket, :virtualmachines, List_VMs.list_virtualmachines())
 
@@ -89,8 +89,22 @@ defmodule AzureAPI.AzureCalls do
 		if response.status_code == 200 do
 			body = Poison.Parser.parse!(response.body)
 
-			statuses = Enum.map(body["value"], fn (x) -> {x["properties"]["availabilityState"], x["properties"]["summary"]} end)
+			statuses = Enum.map(body["value"], fn (x) -> {x["id"], x["properties"]["availabilityState"], x["properties"]["summary"]} end)
 			IO.inspect(statuses)
+
+            # Save to repo
+            for item <- statuses do
+                {name, availability, summary} = item
+
+                if Repo.exists?(from vm in VirtualMachine, where: vm.name == ^name) do
+                    # Get Machine
+                    virtual_machine = Repo.get_by(VirtualMachine, [name: name])
+                    |> List_VMs.update_virtual_machine(%{availability: availability})
+                else
+                    # Create Virtual Machine
+                    # List_VMs.create_virtual_machine(%{name: name})
+                end
+            end
 
 			{:ok, statuses}
 		else

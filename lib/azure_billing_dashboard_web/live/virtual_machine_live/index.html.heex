@@ -12,7 +12,7 @@
 <% end %>
 
 <div style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr">
-  <%= link "Refresh", to: "#", phx_click: "#", class: "button-1", type: "custom" %>
+  <%= link "Refresh", to: "#", refresh: "#", class: "button-1", type: "custom" %>
   <%= live_patch "New Virtual machine", to: Routes.virtual_machine_index_path(@socket, :new), class: "button-1", type: "custom" %>
   <%= link "Batch Start", to: "#", phx_click: "batch-start", class: "button-1", type: "custom" %>
   <%= link "Batch Stop", to: "#", phx_click: "batch-stop", class: "button-1", type: "custom" %>
@@ -27,6 +27,7 @@
     <tr>
       <th>Name</th>
       <th>Process</th>
+      <th>Availability</th>
       <th>Status</th>
       <th>Current Running Cost</th>
       <th>Actions</th>
