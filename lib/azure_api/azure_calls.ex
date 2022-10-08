@@ -61,7 +61,7 @@ defmodule AzureAPI.AzureCalls do
                 end
             end
 
-            Process.send_after(:virtual_machine_controller, :refresh_sync, 1000)
+            # Process.send_after(:virtual_machine_controller, :refresh_sync, 1000)
 
             # assign(socket, :virtualmachines, List_VMs.list_virtualmachines())
 
