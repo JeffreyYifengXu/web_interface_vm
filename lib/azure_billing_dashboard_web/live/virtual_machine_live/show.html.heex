@@ -1,6 +1,19 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script> <%# Needed for Chart.js graphing library %>
 
-<h1>Show Virtual machine</h1>
+&larr; <span><%= live_redirect "Back", to: Routes.virtual_machine_index_path(@socket, :index), class: "button-4" %></span>
+
+<br>
+<br>
+<h1>
+    <div class="details-title">
+        <%= @virtual_machine.name %>
+    </div>
+</h1>
+
+<br>
+
+<span><%= live_patch "Edit Name", to: Routes.virtual_machine_show_path(@socket, :edit, @virtual_machine), class: "button-2" %></span>
+<span><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: @virtual_machine.id, data: [confirm: "Are you sure?"], class: "button-3" %></span>
 
 <%= if @live_action in [:edit] do %>
   <.modal return_to={Routes.virtual_machine_show_path(@socket, :show, @virtual_machine)}>
@@ -15,8 +28,10 @@
   </.modal>
 <% end %>
 
-<ul>
+<br>
+<br>
 
+<ul>
   <li>
     <strong>Name:</strong>
     <%= @virtual_machine.name %>
@@ -44,9 +59,7 @@
 
 </ul>
 
-<span><%= live_patch "Edit", to: Routes.virtual_machine_show_path(@socket, :edit, @virtual_machine), class: "button" %></span> |
-<span><%= live_redirect "Back", to: Routes.virtual_machine_index_path(@socket, :index), class: "button" %></span>
-<br><br><br><br>
+<br><br><br>
 
 <%= @graph %>
 
@@ -84,7 +97,7 @@ new Chart(document.getElementById("line-chart"), {
   type: 'line',
   data: {
     labels: [0,50, 100, 200, 400],
-    datasets: [{ 
+    datasets: [{
         data: [1,27,97,96,5],
         label: "Number of Users",
         borderColor: "#3e95cd",
