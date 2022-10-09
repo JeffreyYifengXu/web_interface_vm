@@ -12,7 +12,7 @@ defmodule AzureAPI.AzureCalls do
     def get_token(azure_keys) do
         # Call Token Endpoint
         HTTPoison.start
-        response = HTTPoison.post! "https://login.microsoftonline.com/a6a9eda9-1fed-417d-bebb-fb86af8465d2/oauth2/token", "grant_type=client_credentials&client_id=4bcba93a-6e11-417f-b4dc-224b008a7385&client_secret=oNH8Q~Gw6j0DKSEkJYlz2Cy65AkTxiPsoSLWKbiZ&resource=https%3A%2F%2Fmanagement.azure.com%2F", [{"Content-Type", "application/x-www-form-urlencoded"}]
+        response = HTTPoison.post! "https://login.microsoftonline.com/#{Map.get(azure_keys, "tenant_id")}/oauth2/token", "grant_type=client_credentials&client_id=#{Map.get(azure_keys, "client_id")}&client_secret=#{Map.get(azure_keys, "client_secret")}&resource=https%3A%2F%2Fmanagement.azure.com%2F", [{"Content-Type", "application/x-www-form-urlencoded"}]
         {_status, body} = Poison.decode(response.body)
         IO.inspect(body["error"])
         token = body["access_token"]
@@ -30,7 +30,7 @@ defmodule AzureAPI.AzureCalls do
         header = ['Authorization': "Bearer " <> Map.get(azure_keys, "token")]
 
         # Call List Endpoint
-        response = HTTPoison.get! "https://management.azure.com/subscriptions/f2b523ec-c203-404c-8b3c-217fa4ce341e/resourceGroups/usyd-12a/providers/Microsoft.Compute/virtualMachines?api-version=2022-03-01", header, []
+        response = HTTPoison.get! "https://management.azure.com/subscriptions/#{Map.get(azure_keys, "sub_id")}/resourceGroups/#{Map.get(azure_keys, "resource_group")}/providers/Microsoft.Compute/virtualMachines?api-version=2022-03-01", header, []
         IO.inspect(response.status_code)
         if response.status_code == 200 do
             body = Poison.Parser.parse!(response.body)
@@ -76,11 +76,13 @@ defmodule AzureAPI.AzureCalls do
 	# GET AZURE AVAILABILITIES
 
 	def get_availability(azure_keys) do
+
+        IO.inspect("GETTING AVAILABILITY ----------------------------------")
 		# Construct header
 		header = ['Authorization': "Bearer " <> Map.get(azure_keys, "token")]
 
 
-        response = HTTPoison.get! "https://management.azure.com/subscriptions/f2b523ec-c203-404c-8b3c-217fa4ce341e/providers/Microsoft.ResourceHealth/availabilityStatuses/current?api-version=2018-07-01", header, []
+        response = HTTPoison.get! "https://management.azure.com/subscriptions/#{Map.get(azure_keys, "sub_id")}/providers/Microsoft.ResourceHealth/availabilityStatuses/current?api-version=2018-07-01", header, []
 
 		# response = HTTPoison.get! "https://management.azure.com/subscriptions/f2b523ec-c203-404c-8b3c-217fa4ce341e/resourceGroups/usyd-12a/providers/Microsoft.ResourceHealth/availabilityStatuses?api-version=2018-07-01&", header, []
 
@@ -106,7 +108,7 @@ defmodule AzureAPI.AzureCalls do
         header = ['Authorization': "Bearer " <> Map.get(azure_keys, "token")]
 
         # Call Start Endpoint
-        HTTPoison.post! "https://management.azure.com/subscriptions/f2b523ec-c203-404c-8b3c-217fa4ce341e/resourceGroups/usyd-12a/providers/Microsoft.Compute/virtualMachines/#{name}/start?api-version=2022-08-01", [], header
+        HTTPoison.post! "https://management.azure.com/subscriptions/#{Map.get(azure_keys, "sub_id")}/resourceGroups/#{Map.get(azure_keys, "resource_group")}/providers/Microsoft.Compute/virtualMachines/#{name}/start?api-version=2022-08-01", [], header
     end
 
     # STOP AZURE MACHINES
@@ -117,7 +119,7 @@ defmodule AzureAPI.AzureCalls do
         header = ['Authorization': "Bearer " <> Map.get(azure_keys, "token")]
 
         # Call Start Endpoint
-        HTTPoison.post! "https://management.azure.com/subscriptions/f2b523ec-c203-404c-8b3c-217fa4ce341e/resourceGroups/usyd-12a/providers/Microsoft.Compute/virtualMachines/#{name}/powerOff?api-version=2022-08-01", [], header
+        HTTPoison.post! "https://management.azure.com/subscriptions/#{Map.get(azure_keys, "sub_id")}/resourceGroups/#{Map.get(azure_keys, "resource_group")}/providers/Microsoft.Compute/virtualMachines/#{name}/powerOff?api-version=2022-08-01", [], header
     end
 
     # GET COST DATA
@@ -135,7 +137,7 @@ defmodule AzureAPI.AzureCalls do
         # Construct Header
         header = ['Authorization': "Bearer " <> Map.get(azure_keys, "token"), 'content-type': "application/json"]
 
-        scope = "subscriptions/f2b523ec-c203-404c-8b3c-217fa4ce341e/resourceGroups/usyd-12a"
+        scope = "subscriptions/#{Map.get(azure_keys, "sub_id")}/resourceGroups/#{Map.get(azure_keys, "resource_group")}"
 
         body = %{
             :type => "Usage",
@@ -147,7 +149,7 @@ defmodule AzureAPI.AzureCalls do
                         :name => "ResourceId",
                         :operator => "In",
                         :values => [
-                            "/subscriptions/f2b523ec-c203-404c-8b3c-217fa4ce341e/resourcegroups/usyd-12a/providers/microsoft.compute/virtualmachines/#{name}"
+                            "/subscriptions/#{Map.get(azure_keys, "sub_id")}/resourcegroups/#{Map.get(azure_keys, "resource_group")}/providers/microsoft.compute/virtualmachines/#{name}"
                         ]
                     }
                 },
