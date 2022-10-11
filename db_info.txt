@@ -1,12 +1,11 @@
 Creating postgres cluster azure-billing-dashboard-db in organization personal
 Postgres cluster azure-billing-dashboard-db created
   Username:    postgres
-  Password:    5348650e22c568d4cb13824e9ed2f364d5ad29394786609c
+  Password:    c90856f5364185e726931d249369ad18ea3b88200b1f04d0
   Hostname:    azure-billing-dashboard-db.internal
   Proxy Port:  5432
   PG Port: 5433
 Save your credentials in a secure place -- you won't be able to see them again!
-
 
 
 Connect to postgres

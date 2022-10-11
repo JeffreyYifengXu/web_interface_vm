@@ -1,4 +1,4 @@
-# fly.toml file generated for azure-billing-dashboard on 2022-08-29T15:15:10+10:00
+# fly.toml file generated for azure-billing-dashboard on 2022-10-11T15:07:53+11:00
 
 app = "azure-billing-dashboard"
 kill_signal = "SIGTERM"
