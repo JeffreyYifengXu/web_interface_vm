@@ -29,7 +29,7 @@ defmodule AzureBillingDashboardWeb.VirtualMachineLive.Index do
   def handle_params(params, _url, socket) do
     IO.inspect("params")
     IO.inspect(params)
-    Process.send_after(self(), :update_live_view, 1000)
+    # Process.send_after(self(), :update_live_view, 1000)
     {:noreply, apply_action(socket, socket.assigns.live_action, params)}
   end
 
@@ -86,7 +86,7 @@ defmodule AzureBillingDashboardWeb.VirtualMachineLive.Index do
     virtual_machine = List_VMs.get_virtual_machine!(id)
     {:ok, _} = List_VMs.delete_virtual_machine(virtual_machine)
 
-    # Process.send_after(self(), :update_live_view, socket, 5000)
+    Process.send_after(self(), :update_live_view, socket, 5000)
 
     {:noreply, assign(socket, :virtualmachines, List_VMs.list_virtualmachines())}
   end
@@ -155,11 +155,9 @@ defmodule AzureBillingDashboardWeb.VirtualMachineLive.Index do
     {:noreply, assign(socket, :virtualmachines, list_virtualmachines())}
   end
 
-  def handle_event("refresh", socket) do
-      # virtual_machine = List_VMs.get_virtual_machine!(id)
-      # VirtualMachineController.stop_virtual_machine(virtual_machine.name)
-      #
-      # {:noreply, assign(socket, :virtualmachines, List_VMs.list_virtualmachines())}
+  def handle_event("refresh", _params, socket) do
+    VirtualMachineController.get_virtual_machines()
+    {:noreply, assign(socket, :virtualmachines, list_virtualmachines())}
   end
 
 end

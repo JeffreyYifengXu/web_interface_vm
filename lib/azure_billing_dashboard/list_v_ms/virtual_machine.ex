@@ -12,6 +12,7 @@ defmodule AzureBillingDashboard.List_VMs.VirtualMachine do
     field :availability, :string, default: "Available"
     field :max_price, :string, default: "2"
     # field :status_bool, :boolean
+    field :odisk_name, :string
 
     timestamps()
   end
@@ -19,7 +20,7 @@ defmodule AzureBillingDashboard.List_VMs.VirtualMachine do
   @doc false
   def changeset(virtual_machine, attrs) do
     virtual_machine
-    |> cast(attrs, [:name, :process, :status, :cost_so_far, :cost_accrued])
+    |> cast(attrs, [:name, :process, :status, :cost_so_far, :cost_accrued, :odisk_name])
     |> validate_required([:name])
     # |> Logger.debug "#{name}"
   end

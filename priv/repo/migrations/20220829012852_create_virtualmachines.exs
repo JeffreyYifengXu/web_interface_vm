@@ -8,6 +8,7 @@ defmodule AzureBillingDashboard.Repo.Migrations.CreateVirtualmachines do
       add :status, :string
       add :cost_so_far, :string
       add :cost_accrued, :string
+      add :odisk_name, :string
 
       timestamps()
     end
