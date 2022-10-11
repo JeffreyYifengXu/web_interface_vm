@@ -1,11 +1,29 @@
 defmodule AzureAPI.VirtualMachineController do
 
+  @moduledoc """
+  Interface for making API calls.
+  Stores required information as a state in the genserver
+
+  Client functions:
+    1. Starts Genserver (upon loading VM page)
+    2. List Machines and Statuses
+    3. Get VM Availability
+    4. Start Machine
+    5. Stop Machine
+    6. Get Cost Data
+  """
+
   alias AzureAPI.AzureCalls
 
   use GenServer
 
   ########### GENSERVER ####################################################
   ########## GENSERVER CLIENT ###############
+
+  @doc """
+
+  """
+
   def start_link(user) do
       #IO.inspect(user.sub_id)
       GenServer.start_link(__MODULE__, user, name: :virtual_machine_controller)
@@ -27,11 +45,6 @@ end
       GenServer.call(:virtual_machine_controller, {:stop_virtual_machine, name})
   end
 
-<<<<<<< HEAD
-  def get_cost_data(name) do
-      GenServer.call(:virtual_machine_controller, {:get_cost_data, name})
-  end
-=======
     def get_cost_data(vm) do
         try do
             GenServer.call(:virtual_machine_controller, {:get_cost_data, vm}, 1000000)
@@ -45,7 +58,6 @@ end
               get_cost_data(vm)
           end
     end
->>>>>>> 983e15b041330bc0246d1bfa71d09704528ca91a
 
   ########## GENSERVER SERVER CALLBACKS ########################
 
@@ -83,7 +95,6 @@ end
       {:reply, token, token}
   end
 
-<<<<<<< HEAD
   def handle_call({:get_cost_data, name}, _from, token) do
 
       # Call Start Function
@@ -91,15 +102,8 @@ end
 
       {:reply, data, token}
   end
-=======
-    def handle_call({:get_cost_data, vm}, _from, token) do
 
-        # Call Start Function
-        data = AzureCalls.get_azure_cost_data(vm, token)
 
-        {:reply, data, token, 1000000}
-    end
->>>>>>> 983e15b041330bc0246d1bfa71d09704528ca91a
 
   # Refresh Token
   def handle_info(:refresh_token, azure_keys) do
@@ -108,7 +112,7 @@ end
   end
 
   def handle_info(:refresh_sync, token) do
-      # IO.inspect("refreshing sync")
+    IO.inspect("refreshing sync")
 
 
     {:ok, _map} = AzureCalls.list_azure_machines_and_statuses(token)
