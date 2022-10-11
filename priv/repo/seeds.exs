@@ -21,5 +21,4 @@ AzureBillingDashboard.Accounts.register_user(%{
   secrete_id: "95963713-b5f6-42d2-b91a-31acc90bbc95",
   object_id: "eff772c6-c116-4cb5-a4bd-088d5b65dd14",
   resource_group: "usyd-12a"
-  # id: "memfhsidfhkd"
 })

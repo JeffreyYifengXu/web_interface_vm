@@ -15,9 +15,9 @@ defmodule AzureAPI.VirtualMachineController do
     GenServer.call(:virtual_machine_controller, :get_virtual_machines)
   end
 
-	def get_availability() do
-		GenServer.call(:virtual_machine_controller, {:get_availability})
-	end
+def get_availability() do
+  GenServer.call(:virtual_machine_controller, {:get_availability})
+end
 
   def start_virtual_machine(name) do
     GenServer.call(:virtual_machine_controller, {:start_virtual_machine, name})
@@ -28,7 +28,7 @@ defmodule AzureAPI.VirtualMachineController do
   end
 
   def get_cost_data(name) do
-      GenServer.call(:virtual_machine_controller, {:get_cost_data, name})
+      GenServer.call(:virtual_machine_controller, {:get_cost_data, name}, 1000000)
   end
 
   ########## GENSERVER SERVER CALLBACKS ########################
@@ -43,12 +43,12 @@ defmodule AzureAPI.VirtualMachineController do
       # IO.inspect(body)
   end
 
-	def handle_call({:get_availability}, _from, token) do
-		# Call availability function
-		data = AzureCalls.get_availability(token)
+def handle_call({:get_availability}, _from, token) do
+  # Call availability function
+  data = AzureCalls.get_availability(token)
 
-		{:reply, data, token}
-	end
+  {:reply, data, token}
+end
 
   def handle_call({:start_virtual_machine, name}, _from, token) do
 
@@ -67,13 +67,14 @@ defmodule AzureAPI.VirtualMachineController do
       {:reply, token, token}
   end
 
-  def handle_call({:get_cost_data, name}, _from, token) do
 
-      # Call Start Function
-      data = AzureCalls.get_azure_cost_data(name, token)
+    def handle_call({:get_cost_data, vm}, _from, token) do
 
-      {:reply, data, token}
-  end
+        # Call Start Function
+        data = AzureCalls.get_azure_cost_data(vm, token)
+
+        {:reply, data, token, 1000000}
+    end
 
   # Refresh Token
   def handle_info(:refresh_token, azure_keys) do
@@ -82,7 +83,7 @@ defmodule AzureAPI.VirtualMachineController do
   end
 
   def handle_info(:refresh_sync, token) do
-      IO.inspect("refreshing sync")
+      # IO.inspect("refreshing sync")
 
 
     {:ok, _map} = AzureCalls.list_azure_machines_and_statuses(token)
@@ -105,7 +106,7 @@ defmodule AzureAPI.VirtualMachineController do
 
   end
 
-    ################ END GENSERVER #######################
+  ################ END GENSERVER #######################
 
 #     ################ API FUNCTIONS #######################
 

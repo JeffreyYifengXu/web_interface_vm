@@ -26,6 +26,8 @@ defmodule AzureBillingDashboardWeb.VirtualMachineLive.VirtualMachineLiveComponen
 
         <td><%= @virtual_machine.availability %></td>
 
+        <td><%= @virtual_machine.max_price %></td>
+
         <td>
             <%= if String.contains?(@virtual_machine.status, "running") or String.contains?(@virtual_machine.status, "start") do %>
                   <div class="status-start">
