@@ -75,7 +75,7 @@ defmodule AzureAPI.AzureCalls do
                 if Repo.exists?(from vm in VirtualMachine, where: vm.name == ^name) do
                     # Get Machine
                     virtual_machine = Repo.get_by(VirtualMachine, [name: name])
-                    |> List_VMs.update_virtual_machine(%{status: power, odisk_name: List.first(os_disk)})
+                    |> List_VMs.update_virtual_machine(%{name: name, status: power, odisk_name: List.first(os_disk)})
                 else
                     # Create Virtual Machine
                     List_VMs.create_virtual_machine(%{name: name, status: power, odisk_name: List.first(os_disk)})

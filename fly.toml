@@ -1,6 +1,6 @@
-# fly.toml file generated for azure-billing-dashboard on 2022-08-29T15:15:10+10:00
+# fly.toml file generated for comp3888-usyd-12a on 2022-10-11T15:25:07+11:00
 
-app = "azure-billing-dashboard"
+app = "comp3888-usyd-12a"
 kill_signal = "SIGTERM"
 kill_timeout = 5
 processes = []
@@ -9,7 +9,7 @@ processes = []
   release_command = "/app/bin/migrate"
 
 [env]
-  PHX_HOST = "azure-billing-dashboard.fly.dev"
+  PHX_HOST = "comp3888-usyd-12a.fly.dev"
   PORT = "8080"
 
 [experimental]
