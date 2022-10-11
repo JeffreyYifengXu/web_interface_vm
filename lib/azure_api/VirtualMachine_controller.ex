@@ -96,21 +96,12 @@ end
       {:reply, token, token}
   end
 
-<<<<<<< HEAD
-  def handle_call({:get_cost_data, name}, _from, token) do
-
-      # Call Start Function
-      data = AzureCalls.get_azure_cost_data(name, token)
-
-      {:reply, data, token}
-  end
-=======
     def handle_call({:get_cost_data, vm}, _from, token) do
 
+      data = AzureCalls.get_azure_cost_data(vm, token)
 
-        {:reply, data, token, 1000000}
+      {:reply, data, token, 1000000}
     end
->>>>>>> 983e15b041330bc0246d1bfa71d09704528ca91a
 
   # Refresh Token
   def handle_info(:refresh_token, azure_keys) do
