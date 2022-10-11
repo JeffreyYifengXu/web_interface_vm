@@ -31,10 +31,11 @@ defmodule AzureAPI.AzureCalls do
 
         # Call List Endpoint
         response = HTTPoison.get! "https://management.azure.com/subscriptions/f2b523ec-c203-404c-8b3c-217fa4ce341e/resourceGroups/usyd-12a/providers/Microsoft.Compute/virtualMachines?api-version=2022-03-01", header, []
+
         IO.inspect(response.status_code)
         if response.status_code == 200 do
             body = Poison.Parser.parse!(response.body)
-            # IO.inspect(body)
+            IO.inspect(body)
 
             # Extract names
             names = Enum.map(body["value"], fn (x) -> x["name"] end)

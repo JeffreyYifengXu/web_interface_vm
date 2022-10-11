@@ -98,7 +98,7 @@ defmodule AzureBillingDashboardWeb.VirtualMachineLive.Index do
     virtual_machine = List_VMs.get_virtual_machine!(id)
     VirtualMachineController.start_virtual_machine(virtual_machine.name)
 
-    Process.send_after(self(), :update_live_view, socket, 5000)
+    # Process.send_after(self(), :update_live_view, socket, 5000)
 
     # {:noreply, assign(socket, :virtual_machine.process, 100)}
 
