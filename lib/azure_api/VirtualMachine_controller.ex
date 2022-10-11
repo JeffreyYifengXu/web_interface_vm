@@ -27,11 +27,11 @@ end
       GenServer.call(:virtual_machine_controller, {:stop_virtual_machine, name})
   end
 
-<<<<<<< HEAD
-  def get_cost_data(name) do
-      GenServer.call(:virtual_machine_controller, {:get_cost_data, name})
-  end
-=======
+# <<<<<<< HEAD
+#   def get_cost_data(name) do
+#       GenServer.call(:virtual_machine_controller, {:get_cost_data, name})
+#   end
+# =======
     def get_cost_data(vm) do
         try do
             GenServer.call(:virtual_machine_controller, {:get_cost_data, vm}, 1000000)
@@ -45,7 +45,7 @@ end
               get_cost_data(vm)
           end
     end
->>>>>>> 983e15b041330bc0246d1bfa71d09704528ca91a
+# >>>>>>> 983e15b041330bc0246d1bfa71d09704528ca91a
 
   ########## GENSERVER SERVER CALLBACKS ########################
 
@@ -83,15 +83,15 @@ end
       {:reply, token, token}
   end
 
-<<<<<<< HEAD
-  def handle_call({:get_cost_data, name}, _from, token) do
-
-      # Call Start Function
-      data = AzureCalls.get_azure_cost_data(name, token)
-
-      {:reply, data, token}
-  end
-=======
+# <<<<<<< HEAD
+#   def handle_call({:get_cost_data, name}, _from, token) do
+#
+#       # Call Start Function
+#       data = AzureCalls.get_azure_cost_data(name, token)
+#
+#       {:reply, data, token}
+#   end
+# =======
     def handle_call({:get_cost_data, vm}, _from, token) do
 
         # Call Start Function
@@ -99,7 +99,7 @@ end
 
         {:reply, data, token, 1000000}
     end
->>>>>>> 983e15b041330bc0246d1bfa71d09704528ca91a
+# >>>>>>> 983e15b041330bc0246d1bfa71d09704528ca91a
 
   # Refresh Token
   def handle_info(:refresh_token, azure_keys) do
