@@ -1,11 +1,29 @@
 defmodule AzureAPI.VirtualMachineController do
 
+  @moduledoc """
+  Interface for making API calls.
+  Stores required information as a state in the genserver
+
+  Client functions:
+    1. Starts Genserver (upon loading VM page)
+    2. List Machines and Statuses
+    3. Get VM Availability
+    4. Start Machine
+    5. Stop Machine
+    6. Get Cost Data
+  """
+
   alias AzureAPI.AzureCalls
 
   use GenServer
 
   ########### GENSERVER ####################################################
   ########## GENSERVER CLIENT ###############
+
+  @doc """
+
+  """
+
   def start_link(user) do
       #IO.inspect(user.sub_id)
       GenServer.start_link(__MODULE__, user, name: :virtual_machine_controller)
@@ -67,13 +85,11 @@ end
       {:reply, token, token}
   end
 
-
     def handle_call({:get_cost_data, vm}, _from, token) do
 
-        # Call Start Function
-        data = AzureCalls.get_azure_cost_data(vm, token)
+      data = AzureCalls.get_azure_cost_data(vm, token)
 
-        {:reply, data, token, 1000000}
+      {:reply, data, token, 1000000}
     end
 
   # Refresh Token
@@ -83,7 +99,7 @@ end
   end
 
   def handle_info(:refresh_sync, token) do
-      # IO.inspect("refreshing sync")
+    IO.inspect("refreshing sync")
 
 
     {:ok, _map} = AzureCalls.list_azure_machines_and_statuses(token)

@@ -1,5 +1,16 @@
 defmodule AzureAPI.AzureCalls do
 
+    @moduledoc """
+    API functions to call:
+
+        1. Token
+        2. List Machines and Statuses
+        3. Get VM Availability
+        4. Start Machine
+        5. Stop Machine
+        6. Get Cost Data
+    """
+
     use AzureBillingDashboardWeb, :live_view
 
     import Ecto.Query, warn: false
@@ -8,6 +19,15 @@ defmodule AzureAPI.AzureCalls do
     alias AzureBillingDashboard.List_VMs.VirtualMachine
 
     ################ API FUNCTIONS #######################
+
+    @doc """
+    Retrives access token from Azure.
+
+    Token expires every hour so it buffers a :refresh_token message back to
+    the genserver every 60 minutes.
+
+    Returns token
+    """
 
     def get_token(azure_keys) do
         # Call Token Endpoint
@@ -141,7 +161,8 @@ defmodule AzureAPI.AzureCalls do
     end
 
     # GET COST DATA
-    """
+
+    @doc """
     TO CALL THIS FUNCTION, CALL THE GENSERVER FUNCTION
 
     For example, needed in the details page

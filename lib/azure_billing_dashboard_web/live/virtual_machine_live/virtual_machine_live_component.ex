@@ -54,6 +54,8 @@ defmodule AzureBillingDashboardWeb.VirtualMachineLive.VirtualMachineLiveComponen
         <% end %>
             <span><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: @virtual_machine.id, data: [confirm: "Are you sure?"], class: "button-3" %></span>
         </td>
+        
+        
     </tr>
     """
   end
