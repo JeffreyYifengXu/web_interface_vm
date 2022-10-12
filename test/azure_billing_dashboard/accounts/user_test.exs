@@ -21,6 +21,7 @@ defmodule AzureBillingDashboard.ShowTest do
             changeset = User.changeset(%User{}, @invalid_attrs)
             assert changeset.valid?
         end
-
     end
+    
+    
 end
