@@ -129,6 +129,8 @@ defmodule AzureAPI.AzureCalls do
 
         # Call Start Endpoint
         HTTPoison.post! "https://management.azure.com/subscriptions/#{Map.get(azure_keys, "sub_id")}/resourceGroups/#{Map.get(azure_keys, "resource_group")}/providers/Microsoft.Compute/virtualMachines/#{name}/start?api-version=2022-08-01", [], header
+
+        # IO.inspect(response)
     end
 
     # STOP AZURE MACHINES

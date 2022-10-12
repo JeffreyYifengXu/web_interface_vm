@@ -66,7 +66,7 @@ end
   def handle_call(:get_virtual_machines, _from, azure_keys) do
 
       # Call list_VM endpoint
-      {status, map} = AzureCalls.list_azure_machines_and_statuses(azure_keys)
+      {_status, map} = AzureCalls.list_azure_machines_and_statuses(azure_keys)
 
       {:reply, map, azure_keys}
       # IO.inspect(body)
