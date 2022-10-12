@@ -29,7 +29,7 @@ defmodule AzureBillingDashboardWeb.VirtualMachineLive.Index do
   def handle_params(params, _url, socket) do
     IO.inspect("params")
     IO.inspect(params)
-    # Process.send_after(self(), :update_live_view, 1000)
+    Process.send_after(self(), :update_live_view, 1000)
     {:noreply, apply_action(socket, socket.assigns.live_action, params)}
   end
 
@@ -110,6 +110,8 @@ defmodule AzureBillingDashboardWeb.VirtualMachineLive.Index do
   """
   def handle_event("stop", %{"id" => id}, socket) do
     virtual_machine = List_VMs.get_virtual_machine!(id)
+
+    IO.inspect("################ stop button pressed #########################")
     VirtualMachineController.stop_virtual_machine(virtual_machine.name)
 
     # {:noreply, assign(socket, :virtual_machine.process, 100)}
@@ -156,7 +158,8 @@ defmodule AzureBillingDashboardWeb.VirtualMachineLive.Index do
 
 
   def handle_info(:update_live_view, socket) do
-    # Process.send_after(self(), :update_live_view, 1000)
+    Process.send_after(self(), :update_live_view, 5000)
+    VirtualMachineController.get_availability()
     {:noreply, assign(socket, :virtualmachines, list_virtualmachines())}
   end
 
@@ -166,7 +169,6 @@ defmodule AzureBillingDashboardWeb.VirtualMachineLive.Index do
 
   def handle_event("refresh", _params, socket) do
     VirtualMachineController.get_virtual_machines()
-    VirtualMachineController.get_availability()
     {:noreply, assign(socket, :virtualmachines, list_virtualmachines())}
   end
 

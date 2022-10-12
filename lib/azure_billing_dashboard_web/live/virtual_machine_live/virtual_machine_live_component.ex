@@ -26,8 +26,6 @@ defmodule AzureBillingDashboardWeb.VirtualMachineLive.VirtualMachineLiveComponen
 
         <td><%= @virtual_machine.availability %></td>
 
-        <td><%= @virtual_machine.max_price %></td>
-
         <td>
             <%= if String.contains?(@virtual_machine.status, "running") or String.contains?(@virtual_machine.status, "start") do %>
                   <div class="status-start">
@@ -54,8 +52,8 @@ defmodule AzureBillingDashboardWeb.VirtualMachineLive.VirtualMachineLiveComponen
         <% end %>
             <span><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: @virtual_machine.id, data: [confirm: "Are you sure?"], class: "button-3" %></span>
         </td>
-        
-        
+
+
     </tr>
     """
   end

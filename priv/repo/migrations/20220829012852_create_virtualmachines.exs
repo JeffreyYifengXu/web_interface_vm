@@ -10,6 +10,7 @@ defmodule AzureBillingDashboard.Repo.Migrations.CreateVirtualmachines do
       add :cost_accrued, :string
       add :availability, :string
       add :max_price, :string
+      add :availability_summary, :string
       add :odisk_name, :string
 
       timestamps()

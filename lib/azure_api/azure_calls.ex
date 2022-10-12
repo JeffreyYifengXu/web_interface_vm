@@ -34,9 +34,10 @@ defmodule AzureAPI.AzureCalls do
         HTTPoison.start
         response = HTTPoison.post! "https://login.microsoftonline.com/#{Map.get(azure_keys, "tenant_id")}/oauth2/token", "grant_type=client_credentials&client_id=#{Map.get(azure_keys, "client_id")}&client_secret=#{Map.get(azure_keys, "client_secret")}&resource=https%3A%2F%2Fmanagement.azure.com%2F", [{"Content-Type", "application/x-www-form-urlencoded"}]
         {_status, body} = Poison.decode(response.body)
-        # IO.inspect(body["error"])
+
+        IO.inspect("################# Initizliase API Calls ##################")
+        IO.inspect(body["error"])
         token = body["access_token"]
-        IO.inspect(token)
 
         # Schedule a new token after 1 hour
         Process.send_after(:virtual_machine_controller, :refresh_token, 1 * 60 * 60 * 1000)
@@ -47,16 +48,13 @@ defmodule AzureAPI.AzureCalls do
     # LIST AZURE MACHINES
     def list_azure_machines_and_statuses(azure_keys) do
         # Construct Header
-        # IO.inspect(Map.get(azure_keys, "token"))
         header = ['Authorization': "Bearer " <> Map.get(azure_keys, "token")]
 
         # Call List Endpoint
         response = HTTPoison.get! "https://management.azure.com/subscriptions/#{Map.get(azure_keys, "sub_id")}/resourceGroups/#{Map.get(azure_keys, "resource_group")}/providers/Microsoft.Compute/virtualMachines?api-version=2022-03-01", header, []
 
-        IO.inspect(response.status_code)
         if response.status_code == 200 do
             body = Poison.Parser.parse!(response.body)
-            IO.inspect(body)
 
             # Extract names
             names = Enum.map(body["value"], fn (x) -> x["name"] end)
@@ -100,24 +98,35 @@ defmodule AzureAPI.AzureCalls do
 
         IO.inspect("GETTING AVAILABILITY ----------------------------------")
 		# Construct header
-		header = ['Authorization': "Bearer " <> Map.get(azure_keys, "token"), 'content-type': "application/json"]
+		header = ['Authorization': "Bearer " <> Map.get(azure_keys, "token")]
 
+        scope = "#{Map.get(azure_keys, "sub_id")}/resourceGroups/#{Map.get(azure_keys, "resource_group")}"
 
-        response = HTTPoison.get! "https://management.azure.com/subscriptions/#{Map.get(azure_keys, "sub_id")}/providers/Microsoft.ResourceHealth/availabilityStatuses/current?api-version=2018-07-01", header, []
+        url = "https://management.azure.com/subscriptions/#{scope}/providers/Microsoft.ResourceHealth/availabilityStatuses?api-version=2018-07-01"
+
+        response = HTTPoison.get! url, header, []
+
+        # response = HTTPoison.get! "https://management.azure.com/subscriptions/#{Map.get(azure_keys, "sub_id")}/providers/Microsoft.ResourceHealth/availabilityStatuses/current?api-version=2018-07-01", header, []
 
 		# response = HTTPoison.get! "https://management.azure.com/subscriptions/f2b523ec-c203-404c-8b3c-217fa4ce341e/resourceGroups/usyd-12a/providers/Microsoft.ResourceHealth/availabilityStatuses?api-version=2018-07-01&", header, []
 
+        body = Poison.Parser.parse!(response.body)
 
-        IO.inspect(response)
+        IO.inspect(body)
+
 		if response.status_code == 200 do
-			body = Poison.Parser.parse!(response.body)
 
-			statuses = Enum.map(body["value"], fn (x) -> {x["id"], x["properties"]["availabilityState"], x["properties"]["summary"]} end)
-			IO.inspect(statuses)
+			statuses = Enum.map(body["value"], fn (x) ->
+
+                id_temp = String.split(x["id"], "/")
+                name = Enum.at(id_temp, 8)
+
+                {name, x["properties"]["availabilityState"], x["properties"]["summary"]}
+            end)
+
+            # IO.inspect(statuses)
 
 			# statuses = Enum.map(body["value"], fn (x) -> {x["properties"]["availabilityState"], x["properties"]["summary"]} end)
-			# IO.inspect(statuses)
-
             # Save to repo
             for item <- statuses do
                 {name, availability, summary} = item
@@ -125,7 +134,7 @@ defmodule AzureAPI.AzureCalls do
                 if Repo.exists?(from vm in VirtualMachine, where: vm.name == ^name) do
                     # Get Machine
                     virtual_machine = Repo.get_by(VirtualMachine, [name: name])
-                    |> List_VMs.update_virtual_machine(%{availability: availability})
+                    |> List_VMs.update_virtual_machine(%{availability: availability, availability_summary: summary})
                 else
                     # Create Virtual Machine
                     # List_VMs.create_virtual_machine(%{name: name})
@@ -156,8 +165,16 @@ defmodule AzureAPI.AzureCalls do
         # Construct Header
         header = ['Authorization': "Bearer " <> Map.get(azure_keys, "token")]
 
+        IO.inspect("##################### stop zure machine ########################")
+
         # Call Start Endpoint
-        HTTPoison.post! "https://management.azure.com/subscriptions/#{Map.get(azure_keys, "sub_id")}/resourceGroups/#{Map.get(azure_keys, "resource_group")}/providers/Microsoft.Compute/virtualMachines/#{name}/powerOff?api-version=2022-08-01", [], header
+
+        response = HTTPoison.post! "https://management.azure.com/subscriptions/#{Map.get(azure_keys, "sub_id")}/resourceGroups/#{Map.get(azure_keys, "resource_group")}/providers/Microsoft.Compute/virtualMachines/#{name}/powerOff?api-version=2022-08-01", [], header
+
+        # body = Poison.Parser.parse!(response.body)
+
+        IO.inspect(response)
+
     end
 
     # GET COST DATA
