@@ -116,12 +116,18 @@ defmodule AzureAPI.AzureCalls do
 
 		if response.status_code == 200 do
 
+
 			statuses = Enum.map(body["value"], fn (x) ->
 
                 id_temp = String.split(x["id"], "/")
                 name = Enum.at(id_temp, 8)
 
-                {name, x["properties"]["availabilityState"], x["properties"]["summary"]}
+                if String.contains?(x["properties"]["title"], "preempted") do
+                    {name, x["properties"]["Available"], x["properties"]["summary"]}
+                else
+                    {name, x["properties"]["availabilityState"], x["properties"]["summary"]}
+                end
+
             end)
 
             # IO.inspect(statuses)
