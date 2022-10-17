@@ -18,11 +18,18 @@
   <%= link "Batch Stop", to: "#", phx_click: "batch-stop", class: "button-1", type: "custom" %>
 </div>
 
-<hr style="width:120%">
+<hr style="width:100%">
 
-<h1>Current VM's</h1>
+<h1 style="text-align: center;">Current VM's</h1>
 
-<table style="width:120%; text-align: center;">
+<table style="width:100%; text-align: center;">
+  <colgroup>
+    <col span="1" style="width: 40%;">
+    <col span="1" style="width: 5%;">
+    <col span="1" style="width: 30%;">
+    <col span="1" style="width: 10%;">
+    <col span="1" style="width: 15%;">
+  </colgroup>
   <thead>
     <tr>
       <th>Name</th>
@@ -51,8 +58,18 @@
                 </div>
             </td>
 
-            <td> <%= virtual_machine.status %> </td>
-            
+            <td>
+              <%= if String.contains?(virtual_machine.status, "running") do %>
+                <span style="color:#00FF00;"><%= virtual_machine.status %></span>
+              <% end %>
+              <%= if String.contains?(virtual_machine.status, "stopping") || String.contains?(virtual_machine.status, "stopped") do %>
+                <span style="color:#FF0000;"><%= virtual_machine.status %></span>
+              <% end %>
+              <%= if String.contains?(virtual_machine.status, "deallocated") do %>
+                <span style="color:#0000FF;"><%= virtual_machine.status %></span>
+              <% end %>
+            </td>
+
 
             <td><%= virtual_machine.cost_so_far %></td>
 
