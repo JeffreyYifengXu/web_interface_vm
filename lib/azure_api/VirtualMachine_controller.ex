@@ -45,9 +45,20 @@ end
       GenServer.call(:virtual_machine_controller, {:stop_virtual_machine, name})
   end
 
-  def get_cost_data(name) do
-      GenServer.call(:virtual_machine_controller, {:get_cost_data, name}, 1000000)
-  end
+
+    def get_cost_data(vm) do
+        try do
+            GenServer.call(:virtual_machine_controller, {:get_cost_data, vm}, 1000000)
+          catch
+            :exit, _ ->
+              IO.puts("there was an error")
+              start_link("TEST123")
+
+            e ->
+              IO.puts("Fail state because: #{e}")
+              get_cost_data(vm)
+          end
+    end
 
   ########## GENSERVER SERVER CALLBACKS ########################
 
@@ -55,7 +66,7 @@ end
   def handle_call(:get_virtual_machines, _from, azure_keys) do
 
       # Call list_VM endpoint
-      {status, map} = AzureCalls.list_azure_machines_and_statuses(azure_keys)
+      {_status, map} = AzureCalls.list_azure_machines_and_statuses(azure_keys)
 
       {:reply, map, azure_keys}
       # IO.inspect(body)
@@ -68,12 +79,12 @@ def handle_call({:get_availability}, _from, token) do
   {:reply, data, token}
 end
 
-  def handle_call({:start_virtual_machine, name}, _from, token) do
+  def handle_call({:start_virtual_machine, name}, _from, azure_keys) do
 
       # Call start endpoint
-      AzureCalls.start_azure_machine(name, token)
+      data = AzureCalls.start_azure_machine(name, azure_keys)
 
-      {:reply, token, token}
+      {:reply, data, azure_keys}
       # IO.inspect(body)
   end
 
