@@ -169,7 +169,11 @@ defmodule AzureBillingDashboardWeb.VirtualMachineLive.Index do
   def handle_event("refresh", _params, socket) do
     VirtualMachineController.get_virtual_machines()
     VirtualMachineController.get_availability()
+
+    #Display availability
+    # VirtualMachineController.get_virtual_machines()
     {:noreply, assign(socket, :virtualmachines, list_virtualmachines())}
   end
+
 
 end

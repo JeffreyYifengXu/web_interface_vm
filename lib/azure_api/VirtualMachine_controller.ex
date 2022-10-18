@@ -33,9 +33,9 @@ defmodule AzureAPI.VirtualMachineController do
     GenServer.call(:virtual_machine_controller, :get_virtual_machines)
   end
 
-def get_availability() do
-  GenServer.call(:virtual_machine_controller, {:get_availability})
-end
+  def get_availability() do
+    GenServer.call(:virtual_machine_controller, {:get_availability})
+  end
 
   def start_virtual_machine(name) do
     GenServer.call(:virtual_machine_controller, {:start_virtual_machine, name})
