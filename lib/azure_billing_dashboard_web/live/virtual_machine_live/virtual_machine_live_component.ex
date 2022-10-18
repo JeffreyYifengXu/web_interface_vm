@@ -24,7 +24,31 @@ defmodule AzureBillingDashboardWeb.VirtualMachineLive.VirtualMachineLiveComponen
           </div>
         </td>
 
-        <td class="tooltip"> <%= @virtual_machine.availability %> <span class="tooltiptext"><%= @virtual_machine.availability_summary %></span></td>
+        <td class="tooltip">
+            <%= if String.contains?(@virtual_machine.status, "running") or String.contains?(@virtual_machine.status, "start") do %>
+                Running <svg width="50" height="60" style="margin-right: -30%">
+                        <circle cx="16" cy="47" r="12" fill="#0080AF" />
+                        <text x="32%" y="81%" text-anchor="middle" fill="white" font-size="20px" font-family="Verdana" dy=".3em">?</text>
+                        ?
+                        </svg>
+                        <span class="tooltiptext">
+                            <%= if @virtual_machine.max_price < 0 do %>
+                                VM Running based on capacity only
+                            <% else %>
+                                VM Running based on bidding price and capacity
+                            <% end %>
+                        </span>
+            <% end %>
+            <%= if String.contains?(@virtual_machine.status, "deallocated") or String.contains?(@virtual_machine.status, "stop") do %>
+                <%= @virtual_machine.availability %>
+                        <svg width="50" height="60" style="margin-right: -30%">
+                        <circle cx="16" cy="47" r="12" fill="#0080AF" />
+                        <text x="32%" y="81%" text-anchor="middle" fill="white" font-size="20px" font-family="Verdana" dy=".3em">?</text>
+                        ?
+                        </svg>
+                        <span class="tooltiptext"><%= @virtual_machine.availability_summary %></span>
+            <% end %>
+        </td>
 
         <td>
             <%= if String.contains?(@virtual_machine.status, "running") or String.contains?(@virtual_machine.status, "start") do %>
@@ -39,7 +63,14 @@ defmodule AzureBillingDashboardWeb.VirtualMachineLive.VirtualMachineLiveComponen
             <% end %>
         </td>
 
-        <td> $<%= @virtual_machine.max_price %> </td>
+        <td>
+            <%= if @virtual_machine.max_price < 0 do %>
+                N/A
+            <% end %>
+            <%= if @virtual_machine.max_price > 0 do %>
+                $<%= @virtual_machine.max_price %>
+            <% end %>
+        </td>
 
         <td> $<%= @virtual_machine.cost_so_far %></td>
 

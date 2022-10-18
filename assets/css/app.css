@@ -5,6 +5,11 @@
 
 .tooltip {
   position: relative;
+  text-align: center;
+  line-height: 110px;
+  /* bottom:20%; */
+  /* align-content: center; */
+  /* align-content: right; */
   /* display: inline-block; */
   /* border-bottom: 1px dotted black; */
 }
@@ -20,10 +25,11 @@
   position: absolute;
   z-index: 1;
   bottom: 2.5%;
-  left: 50%;
-  margin-left: -60px;
+  line-height: 30px;
+  /* left: 50%;
+  margin-left: -60px; */
   height: 140px;
-
+  /* transform: translateX(-10%); */
   /* Fade in tooltip - takes 1 second to go from 0% to 100% opac: */
   opacity: 0;
   transition: opacity 1s;
@@ -78,7 +84,7 @@ tbody {
     border-radius: 0.75rem;
     margin-bottom: 2rem;
     height: 4rem;
-    width: 250px;
+    width: 50px;
 }
 
 .meter span {

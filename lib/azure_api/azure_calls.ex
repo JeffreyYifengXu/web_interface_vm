@@ -72,7 +72,7 @@ defmodule AzureAPI.AzureCalls do
 
         if response.status_code == 200 do
             body = Poison.Parser.parse!(response.body)
-            IO.inspect(body)
+            # IO.inspect(body)
             # Extract names
             general_info = Enum.map(body["value"], fn (x) -> {x["name"], x["properties"]["hardwareProfile"]["vmSize"], x["location"], x["properties"]["storageProfile"]["osDisk"]["osType"], x["properties"]["billingProfile"]["maxPrice"]} end)
 
@@ -85,7 +85,7 @@ defmodule AzureAPI.AzureCalls do
                 {name, vmSize, location, osType, maxPrice} = info
                 instance_view = HTTPoison.get! "https://management.azure.com/subscriptions/f2b523ec-c203-404c-8b3c-217fa4ce341e/resourceGroups/usyd-12a/providers/Microsoft.Compute/virtualMachines/#{name}/instanceView?api-version=2022-03-01", header, []
                 {_status, body} = Poison.decode(instance_view.body)
-                IO.inspect(body)
+                # IO.inspect(body)
                 os_disk = Enum.map(body["disks"], fn (x) -> x["name"] end)
                 # status_update = body["vmAgent"]["statuses"]["time"]
                 case Enum.map(body["statuses"], fn (x) -> x["displayStatus"] end) do

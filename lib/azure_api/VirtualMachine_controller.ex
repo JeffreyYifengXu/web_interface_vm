@@ -33,9 +33,9 @@ defmodule AzureAPI.VirtualMachineController do
     GenServer.call(:virtual_machine_controller, :get_virtual_machines)
   end
 
-  def get_availability() do
-    GenServer.call(:virtual_machine_controller, {:get_availability})
-  end
+def get_availability() do
+  GenServer.call(:virtual_machine_controller, {:get_availability})
+end
 
   def start_virtual_machine(name) do
     GenServer.call(:virtual_machine_controller, {:start_virtual_machine, name})
@@ -106,6 +106,7 @@ end
   # Refresh Token
   def handle_info(:refresh_token, azure_keys) do
     token = AzureCalls.get_token(azure_keys)
+    Map.put(azure_keys, "token", token)
     {:noreply, azure_keys}
   end
 
@@ -132,6 +133,10 @@ end
       {:ok, azure_keys}
 
   end
+
+
+ "https://prices.azure.com/api/retail/prices?currencyCode='AUD'&$filter=serviceFamily eq 'Compute' and armSkuName eq 'Standard_A0'"
+
 
   ################ END GENSERVER #######################
 
