@@ -85,9 +85,14 @@ defmodule AzureAPI.AzureCalls do
                 {name, vmSize, location, osType, maxPrice} = info
                 instance_view = HTTPoison.get! "https://management.azure.com/subscriptions/f2b523ec-c203-404c-8b3c-217fa4ce341e/resourceGroups/usyd-12a/providers/Microsoft.Compute/virtualMachines/#{name}/instanceView?api-version=2022-03-01", header, []
                 {_status, body} = Poison.decode(instance_view.body)
-                [_provision, power] = Enum.map(body["statuses"], fn (x) -> x["displayStatus"] end)
+                IO.inspect(body)
                 os_disk = Enum.map(body["disks"], fn (x) -> x["name"] end)
-                {name, power, os_disk, vmSize, location, osType, maxPrice}
+                # status_update = body["vmAgent"]["statuses"]["time"]
+                case Enum.map(body["statuses"], fn (x) -> x["displayStatus"] end) do
+                    [_provision, power] -> {name, power, os_disk, vmSize, location, osType, maxPrice} # Most times there is a provisioning status and power status -> ["Provisioned", "VM Running"]
+                    [power] -> {name, power, os_disk, vmSize, location, osType, maxPrice} # Sometimes there's only one status -> "Updating"
+                end
+
             end)
 
             # Save to repo
@@ -112,67 +117,6 @@ defmodule AzureAPI.AzureCalls do
            {:error, response.status_code}
         end
     end
-
-
-	# GET AZURE AVAILABILITIES
-	def get_availability_new(azure_keys) do
-
-        IO.inspect("GETTING old AVAILABILITY ----------------------------------")
-		# Construct header
-		header = ['Authorization': "Bearer " <> Map.get(azure_keys, "token")]
-
-        scope = "#{Map.get(azure_keys, "sub_id")}/resourceGroups/#{Map.get(azure_keys, "resource_group")}"
-
-        url = "https://management.azure.com/subscriptions/#{scope}/providers/Microsoft.ResourceHealth/availabilityStatuses?api-version=2018-07-01"
-        response = HTTPoison.get! url, header, []
-        # body = Poison.Parser.parse!(response.body)
-
-        # IO.inspect(body)
-
-        IO.inspect(response)
-		if response.status_code == 200 do
-			body = Poison.Parser.parse!(response.body)
-
-            #Filter out wanted entries from body
-			statuses = Enum.map(body["value"], fn (x) ->
-
-                id_temp = String.split(x["id"], "/")
-                name = Enum.at(id_temp, 8)
-
-                #Check whether the machine is getting prempted, i.e. automatically deallocated by Azure
-                if String.contains?(x["properties"]["title"], "preempted") do
-                    {name, x["properties"]["Available"], x["properties"]["summary"]}
-                    #Also send a notification of some sort ?
-                else
-                    {name, x["properties"]["availabilityState"], x["properties"]["summary"]}
-                end
-
-            end)
-
-            IO.inspect("############# debug #################")
-            IO.inspect(statuses)
-            IO.inspect("\n")
-
-            # Save to repo
-            for item <- statuses do
-                {name, availability, summary} = item
-
-                if Repo.exists?(from vm in VirtualMachine, where: vm.name == ^name) do
-                    # Get VM and update the availability and summary in the repo.
-                    virtual_machine = Repo.get_by(VirtualMachine, [name: name])
-                    |> List_VMs.update_virtual_machine(%{availability: availability, availability_summary: summary})
-
-                else
-                    IO.inspect("############# VM does not exist! ###############")
-                    IO.inspect(name)
-                end
-            end
-
-			{:ok, statuses}
-		else
-			{:error, response.status_code}
-		end
-	end
 
 
     def get_availability(azure_keys) do

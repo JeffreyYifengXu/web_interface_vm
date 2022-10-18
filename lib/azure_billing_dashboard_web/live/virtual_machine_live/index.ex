@@ -6,7 +6,7 @@ defmodule AzureBillingDashboardWeb.VirtualMachineLive.Index do
   # alias AzureBillingDashboard.Repo
   alias AzureAPI.VirtualMachineController
   alias AzureBillingDashboardWeb.UserAuth
-  # import AzureBillingDashboardWeb.VirtualMachineLive.VirtualMachineLiveComponent, only: [handle_event: 3]
+  import AzureBillingDashboardWeb.VirtualMachineLive.VirtualMachineLiveComponent
 
   defmodule Start do
     defstruct id: "start", value: nil
@@ -158,7 +158,7 @@ defmodule AzureBillingDashboardWeb.VirtualMachineLive.Index do
 
 
   def handle_info(:update_live_view, socket) do
-    # Process.send_after(self(), :update_live_view, 5000)
+    Process.send_after(self(), :update_live_view, 5000)
     {:noreply, assign(socket, :virtualmachines, list_virtualmachines())}
   end
 

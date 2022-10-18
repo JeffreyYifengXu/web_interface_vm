@@ -24,7 +24,7 @@ defmodule AzureBillingDashboardWeb.VirtualMachineLive.VirtualMachineLiveComponen
           </div>
         </td>
 
-        <td><%= @virtual_machine.availability %></td>
+        <td class="tooltip"> <%= @virtual_machine.availability %> <span class="tooltiptext"><%= @virtual_machine.availability_summary %></span></td>
 
         <td>
             <%= if String.contains?(@virtual_machine.status, "running") or String.contains?(@virtual_machine.status, "start") do %>
@@ -39,7 +39,9 @@ defmodule AzureBillingDashboardWeb.VirtualMachineLive.VirtualMachineLiveComponen
             <% end %>
         </td>
 
-        <td><%= @virtual_machine.cost_so_far %></td>
+        <td> $<%= @virtual_machine.max_price %> </td>
+
+        <td> $<%= @virtual_machine.cost_so_far %></td>
 
         <td style="display:grid; grid-template-columns:1fr; width: 100%">
             <span><%= live_redirect "Details", to: Routes.virtual_machine_show_path(@socket, :show, @virtual_machine), class: "button-2" %></span>
