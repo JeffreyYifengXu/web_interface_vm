@@ -23,5 +23,4 @@ pipelines:
             #- apt-get install esl-erlang
             #- apt-get install elixir
             #- mix setup
-            - mix ecto.recreate
             - flyctl deploy --remote-only
