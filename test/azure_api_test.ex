@@ -67,7 +67,7 @@ defmodule AzureAPI.Test do
       # Start the first virtual machine that appears
       VirtualMachineController.start_virtual_machine(virtual_machine.name)
 
-      Process.sleep(10,000)
+      Process.sleep(10000)
 
       assert String.contains?(virtual_machine.status, "running")
     end
