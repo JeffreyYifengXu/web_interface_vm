@@ -29,7 +29,7 @@ defmodule AzureBillingDashboardWeb.VirtualMachineLive.Index do
   def handle_params(params, _url, socket) do
     IO.inspect("params")
     IO.inspect(params)
-    Process.send_after(self(), :update_live_view, 1000)
+    Process.send_after(self(), :update_live_view, 5000)
     {:noreply, apply_action(socket, socket.assigns.live_action, params)}
   end
 
