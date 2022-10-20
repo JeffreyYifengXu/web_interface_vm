@@ -57,8 +57,8 @@ RUN mix assets.deploy
 
 # Compile the release
 # Recreate database
-RUN mix ecto.recreate
-RUN mix run priv/repo/seeds.exs
+#RUN mix ecto.recreate
+#RUN mix run priv/repo/seeds.exs
 RUN mix compile
 
 # Changes to config/runtime.exs don't require recompiling the code
