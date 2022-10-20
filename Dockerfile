@@ -40,6 +40,10 @@ COPY mix.exs mix.lock ./
 RUN mix deps.get --only $MIX_ENV
 RUN mkdir config
 
+# Recreate database
+RUN mix ecto.recreate
+RUN mix run priv/repo/seeds.exs
+
 # copy compile-time config files before we compile dependencies
 # to ensure any relevant config change will trigger the dependencies
 # to be re-compiled.
