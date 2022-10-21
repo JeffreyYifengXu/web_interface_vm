@@ -66,7 +66,7 @@ end
   def handle_call(:get_virtual_machines, _from, azure_keys) do
 
       # Call list_VM endpoint
-      {status, map} = AzureCalls.list_azure_machines_and_statuses(azure_keys)
+      {_status, map} = AzureCalls.list_azure_machines_and_statuses(azure_keys)
 
       {:reply, map, azure_keys}
       # IO.inspect(body)
@@ -79,12 +79,12 @@ def handle_call({:get_availability}, _from, token) do
   {:reply, data, token}
 end
 
-  def handle_call({:start_virtual_machine, name}, _from, token) do
+  def handle_call({:start_virtual_machine, name}, _from, azure_keys) do
 
       # Call start endpoint
-      AzureCalls.start_azure_machine(name, token)
+      data = AzureCalls.start_azure_machine(name, azure_keys)
 
-      {:reply, token, token}
+      {:reply, data, azure_keys}
       # IO.inspect(body)
   end
 
@@ -106,6 +106,7 @@ end
   # Refresh Token
   def handle_info(:refresh_token, azure_keys) do
     token = AzureCalls.get_token(azure_keys)
+    Map.put(azure_keys, "token", token)
     {:noreply, azure_keys}
   end
 
@@ -132,6 +133,10 @@ end
       {:ok, azure_keys}
 
   end
+
+
+ "https://prices.azure.com/api/retail/prices?currencyCode='AUD'&$filter=serviceFamily eq 'Compute' and armSkuName eq 'Standard_A0'"
+
 
   ################ END GENSERVER #######################
 
